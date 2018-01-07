@@ -1,9 +1,9 @@
 <?php
 
-namespace Swoft\Http\Server\Http\Concerns;
+namespace Swoft\Http\Server\Base\Concerns;
 
 use Swoft\Helper\JsonHelper;
-use Swoft\Web\Streams\SwooleStream;
+use Swoft\Http\Server\Base\Streams\SwooleStream;
 
 /**
  * @uses      InteractsWithInput

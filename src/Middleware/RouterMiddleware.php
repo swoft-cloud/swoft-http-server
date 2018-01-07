@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Middleware\Http;
+namespace Swoft\Http\Server\Middleware;
 
 use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;

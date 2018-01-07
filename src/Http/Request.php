@@ -4,8 +4,8 @@ namespace Swoft\Http\Server\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use Swoft\Web\Concerns\InteractsWithInput;
-use Swoft\Web\Streams\SwooleStream;
+use Swoft\Http\Server\Base\Concerns\InteractsWithInput;
+use Swoft\Http\Server\Base\Streams\SwooleStream;
 
 /**
  * @uses      Request
@@ -14,7 +14,7 @@ use Swoft\Web\Streams\SwooleStream;
  * @copyright Copyright 2010-2017 Swoft software
  * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
-class Request extends Psr7Request implements ServerRequestInterface
+class Request extends \Swoft\Http\Server\Base\Request implements ServerRequestInterface
 {
     use InteractsWithInput;
 

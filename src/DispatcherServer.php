@@ -8,13 +8,13 @@ use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
 use Swoft\Event\AppEvent;
 use Swoft\Exception\Handler\ExceptionHandlerManager;
-use Swoft\Middleware\Http\ParserMiddleware;
-use Swoft\Middleware\Http\UserMiddleware;
-use Swoft\Middleware\Http\FaviconIcoMiddleware;
-use Swoft\Middleware\Http\HandlerAdapterMiddleware;
-use Swoft\Middleware\Http\PoweredByMiddleware;
-use Swoft\Middleware\Http\RouterMiddleware;
-use Swoft\Middleware\Http\ValidatorMiddleware;
+use Swoft\Http\Server\Middleware\ParserMiddleware;
+use Swoft\Http\Server\Middleware\UserMiddleware;
+use Swoft\Http\Server\Middleware\FaviconIcoMiddleware;
+use Swoft\Http\Server\Middleware\HandlerAdapterMiddleware;
+use Swoft\Http\Server\Middleware\PoweredByMiddleware;
+use Swoft\Http\Server\Middleware\RouterMiddleware;
+use Swoft\Http\Server\Middleware\ValidatorMiddleware;
 
 /**
  * the dispatcher of http server
@@ -32,12 +32,7 @@ class DispatcherServer implements DispatcherInterface
      *
      * @var array
      */
-    private $middlewares
-        = [
-
-        ];
-
-
+    private $middlewares= [];
 
     /**
      * handler adapter

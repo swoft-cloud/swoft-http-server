@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Http\Server\Http;
+namespace Swoft\Http\Server\Base;
 
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;

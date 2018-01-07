@@ -4,6 +4,7 @@ namespace Swoft\Http\Server\Bean\Parser;
 
 use Swoft\Bean\Annotation\RequestMapping;
 use Swoft\Bean\Collector;
+use Swoft\Http\Server\Bean\ControllerCollector;
 
 /**
  * RequestMapping注解解析器
@@ -29,17 +30,12 @@ class RequestMappingParser extends AbstractParser
      */
     public function parser(string $className, $objectAnnotation = null, string $propertyName = "", string $methodName = "", $propertyValue = null)
     {
-        if (!isset(Collector::$requestMapping[$className])) {
+        $collector = ControllerCollector::getCollector();
+        if (!isset($collector[$className])) {
             return;
         }
 
-        // 路由收集
-        $route = $objectAnnotation->getRoute();
-        $httpMethod = $objectAnnotation->getMethod();
-        Collector::$requestMapping[$className]['routes'][] = [
-            'route'  => $route,
-            'method' => $httpMethod,
-            'action' => $methodName
-        ];
+        // collect requestMapping
+        ControllerCollector::collect($className, $objectAnnotation, $propertyName, $methodName, $propertyValue);
     }
 }

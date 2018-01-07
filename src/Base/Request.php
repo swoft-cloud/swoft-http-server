@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Http\Server\Http;
+namespace Swoft\Http\Server\Base;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -8,13 +8,13 @@ use Psr\Http\Message\UriInterface;
 use Swoft\Web\Streams\SwooleStream;
 
 /**
- * @uses      Psr7Request
+ * @uses      Request
  * @version   2017-11-03
  * @author    huangzhhui <huangzhwork@gmail.com>
  * @copyright Copyright 2010-2017 Swoft software
  * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
-class Psr7Request implements RequestInterface
+class Request implements RequestInterface
 {
     use MessageTrait;
 

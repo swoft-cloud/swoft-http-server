@@ -1,9 +1,9 @@
 <?php
 
-namespace Swoft\Http\Server\Http;
+namespace Swoft\Http\Server\Base;
 
 use Psr\Http\Message\StreamInterface;
-use Swoft\Web\Streams\SwooleStream;
+use Swoft\Http\Server\Base\Streams\SwooleStream;
 use Zend\Mime\Decode;
 
 /**

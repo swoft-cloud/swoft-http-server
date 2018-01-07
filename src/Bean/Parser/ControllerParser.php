@@ -5,6 +5,8 @@ namespace Swoft\Http\Server\Bean\Parser;
 use Swoft\Bean\Annotation\Controller;
 use Swoft\Bean\Annotation\Scope;
 use Swoft\Bean\Collector;
+use Swoft\Bean\CollectorInterface;
+use Swoft\Http\Server\Bean\ControllerCollector;
 
 /**
  * AutoController注解解析器
@@ -32,10 +34,10 @@ class ControllerParser extends AbstractParser
     {
         $beanName = $className;
         $scope = Scope::SINGLETON;
-        $prefix = $objectAnnotation->getPrefix();
 
-        // 路由收集
-        Collector::$requestMapping[$className]['prefix'] = $prefix;
+        // collect controller
+        ControllerCollector::collect($className, $objectAnnotation, $propertyName, $methodName, $propertyValue);
+
         return [$beanName, $scope, ""];
     }
 }
