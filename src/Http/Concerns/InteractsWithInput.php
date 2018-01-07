@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Web\Concerns;
+namespace Swoft\Http\Server\Http\Concerns;
 
 use Swoft\Helper\JsonHelper;
 use Swoft\Web\Streams\SwooleStream;

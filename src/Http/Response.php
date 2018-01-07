@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Web;
+namespace Swoft\Http\Server\Http;
 
 use Swoft\Core\RequestContext;
 use Swoft\Bean\Collector;

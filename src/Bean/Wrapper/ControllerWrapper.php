@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Bean\Wrapper;
+namespace Swoft\Http\Server\Bean\Wrapper;
 
 use Swoft\Bean\Annotation\Controller;
 use Swoft\Bean\Annotation\Enum;

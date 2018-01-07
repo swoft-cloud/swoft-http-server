@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Web;
+namespace Swoft\Http\Server\Http;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;

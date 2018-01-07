@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Bean\Parser;
+namespace Swoft\Http\Server\Bean\Parser;
 
 use Swoft\Bean\Annotation\Controller;
 use Swoft\Bean\Annotation\Scope;

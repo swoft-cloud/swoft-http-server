@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Bean\Annotation;
+namespace Swoft\Http\Server\Bean\Annotation;
 
 /**
  * HTTP request method

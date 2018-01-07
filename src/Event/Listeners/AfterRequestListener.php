@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Event\Listeners;
+namespace Swoft\Http\Server\Event\Listeners;
 
 use Swoft\App;
 use Swoft\Core\RequestContext;

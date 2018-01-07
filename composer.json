@@ -22,12 +22,10 @@
       "Swoft\\Http\\Server\\":"src/"
     },
     "files": [
-      "src/Helper/Functions.php"
     ]
   },
   "autoload-dev": {
     "psr-4": {
-      "Swoft\\Test\\": "test/TestCases"
     }
   },
   "repositories": {

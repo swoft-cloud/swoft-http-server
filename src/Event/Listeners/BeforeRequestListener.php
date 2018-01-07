@@ -1,13 +1,12 @@
 <?php
 
-namespace Swoft\Event\Listeners;
+namespace Swoft\Http\Server\Event\Listeners;
 
-use Swoft\App;
-use Swoft\Core\RequestContext;
 use Swoft\Bean\Annotation\Listener;
-use Swoft\Event\EventInterface;
-use Swoft\Event\EventHandlerInterface;
+use Swoft\Core\RequestContext;
 use Swoft\Event\AppEvent;
+use Swoft\Event\EventHandlerInterface;
+use Swoft\Event\EventInterface;
 
 /**
  * 请求前
