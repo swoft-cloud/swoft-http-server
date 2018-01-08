@@ -7,7 +7,7 @@ use Swoft\Http\Server\Bean\Annotation\Controller;
 use Swoft\Http\Server\Bean\Annotation\RequestMapping;
 
 /**
- *
+ * the collector of controller
  *
  * @uses      ControllerCollector
  * @version   2018年01月07日

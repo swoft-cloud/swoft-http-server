@@ -4,14 +4,14 @@ namespace Swoft\Http\Server\Event\Listeners;
 
 use Swoft\Bean\Annotation\Listener;
 use Swoft\Core\RequestContext;
-use Swoft\Event\AppEvent;
 use Swoft\Event\EventHandlerInterface;
 use Swoft\Event\EventInterface;
+use Swoft\Http\Server\Event\HttpServerEvent;
 
 /**
  * 请求前
  *
- * @Listener(AppEvent::BEFORE_REQUEST)
+ * @Listener(HttpServerEvent::BEFORE_REQUEST)
  * @uses      BeforeRequestListener
  * @version   2017年08月30日
  * @author    stelin <phpcrazy@126.com>

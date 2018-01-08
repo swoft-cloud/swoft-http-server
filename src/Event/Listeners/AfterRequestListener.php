@@ -7,12 +7,12 @@ use Swoft\Core\RequestContext;
 use Swoft\Bean\Annotation\Listener;
 use Swoft\Event\EventInterface;
 use Swoft\Event\EventHandlerInterface;
-use Swoft\Event\AppEvent;
+use Swoft\Http\Server\Event\HttpServerEvent;
 
 /**
  * 请求后事件
  *
- * @Listener(AppEvent::AFTER_REQUEST)
+ * @Listener(HttpServerEvent::AFTER_REQUEST)
  * @uses      AfterRequestListener
  * @version   2017年08月30日
  * @author    stelin <phpcrazy@126.com>

@@ -199,7 +199,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * @throws RuntimeException if is moved or not ok
+     * @throws \Swoft\Exception\RuntimeException if is moved or not ok
      */
     private function validateActive()
     {

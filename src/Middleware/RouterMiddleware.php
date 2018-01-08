@@ -38,7 +38,10 @@ class RouterMiddleware implements MiddlewareInterface
     {
         $path        = $request->getUri()->getPath();
         $method      = $request->getMethod();
-        $httpHandler = App::getHttpRouter()->getHandler($path, $method);
+
+        /* @var \Swoft\Http\Server\Router\HandlerMapping $httpRouter*/
+        $httpRouter = App::getBean('httpRouter');
+        $httpHandler = $httpRouter->getHandler($path, $method);
         $request     = $request->withAttribute(self::ATTRIBUTE, $httpHandler);
 
         return $handler->handle($request);

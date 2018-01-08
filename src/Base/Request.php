@@ -5,7 +5,7 @@ namespace Swoft\Http\Server\Base;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-use Swoft\Web\Streams\SwooleStream;
+use Swoft\Http\Server\Base\Streams\SwooleStream;
 
 /**
  * @uses      Request

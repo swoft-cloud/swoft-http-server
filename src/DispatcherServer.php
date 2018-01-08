@@ -6,14 +6,14 @@ use Swoft\App;
 use Swoft\Core\DispatcherInterface;
 use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
-use Swoft\Event\AppEvent;
-use Swoft\Exception\Handler\ExceptionHandlerManager;
-use Swoft\Http\Server\Middleware\ParserMiddleware;
-use Swoft\Http\Server\Middleware\UserMiddleware;
+use Swoft\Http\Server\Event\HttpServerEvent;
+use Swoft\Http\Server\Http\Response;
 use Swoft\Http\Server\Middleware\FaviconIcoMiddleware;
 use Swoft\Http\Server\Middleware\HandlerAdapterMiddleware;
+use Swoft\Http\Server\Middleware\ParserMiddleware;
 use Swoft\Http\Server\Middleware\PoweredByMiddleware;
 use Swoft\Http\Server\Middleware\RouterMiddleware;
+use Swoft\Http\Server\Middleware\UserMiddleware;
 use Swoft\Http\Server\Middleware\ValidatorMiddleware;
 
 /**
@@ -46,7 +46,7 @@ class DispatcherServer implements DispatcherInterface
      *
      * @param array ...$params
      *
-     * @return bool|\Swoft\Web\Response
+     * @return bool|\Psr\Http\Message\ResponseInterface
      */
     public function doDispatcher(...$params)
     {
@@ -65,9 +65,12 @@ class DispatcherServer implements DispatcherInterface
             $request        = RequestContext::getRequest();
             $requestHandler = new RequestHandler($middlewares, $this->handlerAdapter);
             $response       = $requestHandler->handle($request);
+
         } catch (\Throwable $throwable) {
             // Handle by ExceptionHandler
-            $response = ExceptionHandlerManager::handle($throwable);
+//            $response = ExceptionHandlerManager::handle($throwable);
+            var_dump($throwable->getMessage(), $throwable->getFile(), $throwable->getCode());
+            $response = RequestContext::getResponse();
         } finally {
             $this->afterDispatcher($response);
         }
@@ -75,6 +78,11 @@ class DispatcherServer implements DispatcherInterface
         return $response;
     }
 
+    /**
+     * the middlewares of request
+     *
+     * @return array
+     */
     public function requestMiddlewares()
     {
         return array_merge($this->firstMiddleware(), $this->middlewares, $this->lastMiddleware());
@@ -121,7 +129,7 @@ class DispatcherServer implements DispatcherInterface
         RequestContext::setResponse($response);
 
         // Trigger 'Before Request' event
-        App::trigger(AppEvent::BEFORE_REQUEST);
+        App::trigger(HttpServerEvent::BEFORE_REQUEST);
     }
 
     /**
@@ -142,6 +150,6 @@ class DispatcherServer implements DispatcherInterface
         $response->send();
 
         // Trigger 'After Request' event
-        App::trigger(AppEvent::AFTER_REQUEST);
+        App::trigger(HttpServerEvent::AFTER_REQUEST);
     }
 }

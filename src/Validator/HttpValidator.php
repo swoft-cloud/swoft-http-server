@@ -1,10 +1,11 @@
 <?php
 
-namespace Swoft\Validator;
+namespace Swoft\Http\Server\Validator;
 
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Bean\Annotation\ValidatorFrom;
-use Swoft\Web\Request;
+use Swoft\Http\Server\Http\Request;
+use Swoft\Validator\AbstractValidator;
 
 /**
  * validator of swoft

@@ -6,7 +6,7 @@ use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\Bean\Annotation\Bean;
-use Swoft\Exception\Http\NotAcceptableException;
+use Swoft\Http\Server\Exception\NotAcceptableException;
 use Swoft\Middleware\MiddlewareInterface;
 
 /**

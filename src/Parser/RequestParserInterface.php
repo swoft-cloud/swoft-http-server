@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Web;
+namespace Swoft\Http\Server\Parser;
 
 use Psr\Http\Message\ServerRequestInterface;
 

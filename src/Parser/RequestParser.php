@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Web;
+namespace Swoft\Http\Server\Parser;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
@@ -50,7 +50,7 @@ class RequestParser implements RequestParserInterface
             return $request;
         }
 
-        /* @var \Swoft\Web\RequestParserInterface $parser */
+        /* @var \Swoft\Http\Server\Parser\RequestParserInterface $parser */
         $parserBeanName = $parsers[$contentType];
         $parser         = App::getBean($parserBeanName);
 

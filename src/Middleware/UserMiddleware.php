@@ -5,9 +5,9 @@ namespace Swoft\Http\Server\Middleware;
 use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Swoft\Bean\Collector\MiddlewareCollector;
 use Swoft\Core\RequestHandler;
 use Swoft\Bean\Annotation\Bean;
-use Swoft\Bean\Collector;
 use Swoft\Middleware\MiddlewareInterface;
 
 /**
@@ -41,7 +41,9 @@ class UserMiddleware implements MiddlewareInterface
             $exploded             = explode('@', $info['handler']);
             $controllerClass      = $exploded[0] ?? '';
             $action               = isset($exploded[1]) ? $exploded[1] : '';
-            $collectedMiddlewares = Collector::$requestMapping[$controllerClass]['middlewares']??[];
+
+            $collector = MiddlewareCollector::getCollector();
+            $collectedMiddlewares = $collector[$controllerClass]['middlewares']??[];
 
             // Get group middleware from Collector
             if ($controllerClass) {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Swoft\Router\Http;
+namespace Swoft\Http\Server\Router;
 
 /**
  * Class AbstractRouter
- * @package Swoft\Router\Http
+ * @package Swoft\Http\Server\Router
  *
  * @uses      HandlerMapping
  * @version   2017年07月14日

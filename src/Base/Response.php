@@ -3,7 +3,6 @@
 namespace Swoft\Http\Server\Base;
 
 use Psr\Http\Message\ResponseInterface;
-use Swoft\Http\Server\Base\MessageTrait;
 
 /**
  * Response父类

@@ -1,10 +1,11 @@
 <?php
 
-namespace Swoft\Web;
+namespace Swoft\Http\Server\Parser;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Helper\JsonHelper;
+use Swoft\Http\Server\Http\Request;
 
 /**
  * the json parser of request

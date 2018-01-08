@@ -1,18 +1,18 @@
 <?php
 
-namespace Swoft\Router\Http;
+namespace Swoft\Http\Server\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
 use Swoft\Core\RequestContext;
 use Swoft\Bean\Annotation\Bean;
-use Swoft\Exception\Http\MethodNotAllowedException;
-use Swoft\Exception\Http\RouteNotFoundException;
+use Swoft\Http\Server\Exception\MethodNotAllowedException;
+use Swoft\Http\Server\Exception\RouteNotFoundException;
 use Swoft\Exception\InvalidArgumentException;
 use Swoft\Helper\PhpHelper;
 use Swoft\Router\HandlerAdapterInterface;
-use Swoft\Web\Request;
-use Swoft\Web\Response;
+use Swoft\Http\Server\Http\Request;
+use Swoft\Http\Server\Http\Response;
 
 /**
  * http handler adapter
@@ -30,9 +30,9 @@ class HandlerAdapter implements HandlerAdapterInterface
      * execute handler with controller and action
      * @param ServerRequestInterface $request request object
      * @param array $routeInfo handler info
-     * @return \Swoft\Web\Response
-     * @throws \Swoft\Exception\Http\MethodNotAllowedException
-     * @throws \Swoft\Exception\Http\RouteNotFoundException
+     * @return Response
+     * @throws \Swoft\Http\Server\Exception\MethodNotAllowedException
+     * @throws \Swoft\Http\Server\Exception\RouteNotFoundException
      */
     public function doHandler(ServerRequestInterface $request, array $routeInfo)
     {

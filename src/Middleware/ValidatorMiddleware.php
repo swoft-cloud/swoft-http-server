@@ -7,9 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
 use Swoft\Bean\Annotation\Bean;
-use Swoft\Bean\Collector;
+use Swoft\Bean\Collector\ValidatorCollector;
 use Swoft\Middleware\MiddlewareInterface;
-use Swoft\Validator\HttpValidator;
+use Swoft\Http\Server\Validator\HttpValidator;
 
 /**
  * validator of request
@@ -43,9 +43,10 @@ class ValidatorMiddleware implements MiddlewareInterface
 
             /* @var HttpValidator $validator */
             $validator  = App::getBean(HttpValidator::class);
+            $collector = ValidatorCollector::getCollector();
 
-            if (isset(Collector::$validator[$className][$validatorKey]['validator'])) {
-                $validators = Collector::$validator[$className][$validatorKey]['validator'];
+            if (isset($collector[$className][$validatorKey]['validator'])) {
+                $validators = $collector[$className][$validatorKey]['validator'];
                 $request = $validator->validate($validators, $request, $matches);
             }
         }

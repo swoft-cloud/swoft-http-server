@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoft\Router\Http;
+namespace Swoft\Http\Server\Router;
 
 /**
  * Interface RouterInterface
