@@ -6,7 +6,7 @@ use Swoft\Bean\Annotation\Listener;
 use Swoft\Event\AppEvent;
 use Swoft\Event\EventHandlerInterface;
 use Swoft\Event\EventInterface;
-use Swoft\Http\Server\Bean\ControllerCollector;
+use Swoft\Http\Server\Bean\Collector\ControllerCollector;
 
 /**
  * the listener of applicatioin loader

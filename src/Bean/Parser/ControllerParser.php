@@ -2,11 +2,10 @@
 
 namespace Swoft\Http\Server\Bean\Parser;
 
-use Swoft\Bean\Annotation\Controller;
+use Swoft\Http\Server\Bean\Annotation\Controller;
 use Swoft\Bean\Annotation\Scope;
-use Swoft\Bean\Collector;
-use Swoft\Bean\CollectorInterface;
-use Swoft\Http\Server\Bean\ControllerCollector;
+use Swoft\Bean\Parser\AbstractParser;
+use Swoft\Http\Server\Bean\Collector\ControllerCollector;
 
 /**
  * AutoController注解解析器

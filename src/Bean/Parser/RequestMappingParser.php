@@ -2,9 +2,9 @@
 
 namespace Swoft\Http\Server\Bean\Parser;
 
-use Swoft\Bean\Annotation\RequestMapping;
-use Swoft\Bean\Collector;
-use Swoft\Http\Server\Bean\ControllerCollector;
+use Swoft\Bean\Parser\AbstractParser;
+use Swoft\Http\Server\Bean\Annotation\RequestMapping;
+use Swoft\Http\Server\Bean\Collector\ControllerCollector;
 
 /**
  * RequestMapping注解解析器

@@ -140,7 +140,7 @@ class HandlerAdapter implements HandlerAdapterInterface
     private function defaultHandler(array $handler)
     {
         list($controller, $actionId) = $handler;
-        $httpRouter = App::getHttpRouter();
+        $httpRouter = App::getBean('httpRouter');
 
         $actionId = empty($actionId) ? $httpRouter->defaultAction : $actionId;
         if (!method_exists($controller, $actionId)) {

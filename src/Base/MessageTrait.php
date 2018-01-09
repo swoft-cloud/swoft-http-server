@@ -3,7 +3,7 @@
 namespace Swoft\Http\Server\Base;
 
 use Psr\Http\Message\StreamInterface;
-use Swoft\Http\Server\Base\Streams\SwooleStream;
+use Swoft\Http\Streams\SwooleStream;
 use Zend\Mime\Decode;
 
 /**

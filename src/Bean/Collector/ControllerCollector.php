@@ -1,10 +1,11 @@
 <?php
 
-namespace Swoft\Http\Server\Bean;
+namespace Swoft\Http\Server\Bean\Collector;
 
 use Swoft\Bean\CollectorInterface;
 use Swoft\Http\Server\Bean\Annotation\Controller;
 use Swoft\Http\Server\Bean\Annotation\RequestMapping;
+use Swoft\Http\Server\Bean\Annotation\RequestMethod;
 
 /**
  * the collector of controller
@@ -44,6 +45,15 @@ class ControllerCollector implements CollectorInterface
                 'route'  => $route,
                 'method' => $httpMethod,
                 'action' => $methodName
+            ];
+            return ;
+        }
+
+        if ($objectAnnotation == null && isset(self::$requestMapping[$className])) {
+            self::$requestMapping[$className]['routes'][] = [
+                'route'  => "",
+                'method' => [RequestMethod::GET, RequestMethod::POST],
+                'action' => $methodName,
             ];
             return ;
         }
