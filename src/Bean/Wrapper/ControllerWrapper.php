@@ -12,7 +12,7 @@ use Swoft\Bean\Annotation\Number;
 use Swoft\Bean\Annotation\Strings;
 use Swoft\Bean\Annotation\Value;
 use Swoft\Bean\Annotation\View;
-use Swoft\Bean\Wrapper\AbstractWrapper;
+use Swoft\Bean\Wrapper\AbstractWrapperInterface;
 use Swoft\Http\Server\Bean\Annotation\Controller;
 use Swoft\Http\Server\Bean\Annotation\RequestMapping;
 
@@ -25,7 +25,7 @@ use Swoft\Http\Server\Bean\Annotation\RequestMapping;
  * @copyright Copyright 2010-2016 swoft software
  * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
-class ControllerWrapper extends AbstractWrapper
+class ControllerWrapper extends AbstractWrapperInterface
 {
     /**
      * 类注解
