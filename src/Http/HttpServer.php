@@ -6,10 +6,10 @@ use Swoft\App;
 use Swoft\Bean\Collector\SwooleListenerCollector;
 use Swoft\Bootstrap\SwooleEvent;
 use Swoft\Exception\RuntimeException;
-use Swoft\Server\AbstractServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server;
+use Swoft\Bootstrap\Server\AbstractServer;
 
 /**
  * HTTP服务器
