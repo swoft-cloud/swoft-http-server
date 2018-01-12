@@ -3,6 +3,9 @@
 namespace Swoft\Http\Server\Http;
 
 use Swoft\App;
+use Swoft\Bean\Collector\SwooleListenerCollector;
+use Swoft\Bootstrap\SwooleEvent;
+use Swoft\Exception\RuntimeException;
 use Swoft\Server\AbstractServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
@@ -34,26 +37,40 @@ class HttpServer extends AbstractServer
 
         // 设置事件监听
         $this->server->set($this->setting);
-        $this->server->on('start', [$this, 'onStart']);
-        $this->server->on('workerStart', [$this, 'onWorkerStart']);
-        $this->server->on('managerStart', [$this, 'onManagerStart']);
-        $this->server->on('request', [$this, 'onRequest']);
-        $this->server->on('task', [$this, 'onTask']);
-        $this->server->on('pipeMessage', [$this, 'onPipeMessage']);
-        $this->server->on('finish', [$this, 'onFinish']);
+        $this->server->on(SwooleEvent::ON_START, [$this, 'onStart']);
+        $this->server->on(SwooleEvent::ON_WORKER_START, [$this, 'onWorkerStart']);
+        $this->server->on(SwooleEvent::ON_MANAGER_START, [$this, 'onManagerStart']);
+        $this->server->on(SwooleEvent::ON_REQUEST, [$this, 'onRequest']);
+        $this->server->on(SwooleEvent::ON_TASK, [$this, 'onTask']);
+        $this->server->on(SwooleEvent::ON_PIPE_MESSAGE, [$this, 'onPipeMessage']);
+        $this->server->on(SwooleEvent::ON_FINISH, [$this, 'onFinish']);
 
         // 启动RPC服务
         if ((int)$this->serverSetting['tcpable'] === 1) {
-            $this->listen = $this->server->listen($this->tcpSetting['host'], $this->tcpSetting['port'], $this->tcpSetting['type']);
-            $tcpSetting   = $this->getListenTcpSetting();
-            $this->listen->set($tcpSetting);
-            $this->listen->on('connect', [$this, 'onConnect']);
-            $this->listen->on('receive', [$this, 'onReceive']);
-            $this->listen->on('close', [$this, 'onClose']);
+            $this->registerRpcEvent();
         }
 
+        $this->registerSwooleServerEvents();
         $this->beforeStart();
         $this->server->start();
+    }
+
+    /**
+     * register rpc event
+     */
+    private function registerRpcEvent()
+    {
+        $swooleListeners = SwooleListenerCollector::getCollector();
+        if (!isset($swooleListeners[SwooleEvent::TYPE_PORT][0]) || empty($swooleListeners[SwooleEvent::TYPE_PORT][0])) {
+            throw new RuntimeException("Please 'composer require swoft/rpc-server'! ");
+        }
+
+        $this->listen = $this->server->listen($this->tcpSetting['host'], $this->tcpSetting['port'], $this->tcpSetting['type']);
+        $tcpSetting   = $this->getListenTcpSetting();
+        $this->listen->set($tcpSetting);
+
+        $swooleRpcPortEvents = $swooleListeners[SwooleEvent::TYPE_PORT][0];
+        $this->registerSwooleEvents($this->listen, $swooleRpcPortEvents);
     }
 
     /**
