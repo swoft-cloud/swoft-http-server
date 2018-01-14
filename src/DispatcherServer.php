@@ -7,7 +7,7 @@ use Swoft\Core\DispatcherInterface;
 use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
 use Swoft\Http\Server\Event\HttpServerEvent;
-use Swoft\Http\Server\Http\Response;
+use Swoft\Http\Message\Server\Response;
 use Swoft\Http\Server\Middleware\FaviconIcoMiddleware;
 use Swoft\Http\Server\Middleware\HandlerAdapterMiddleware;
 use Swoft\Http\Server\Middleware\ParserMiddleware;

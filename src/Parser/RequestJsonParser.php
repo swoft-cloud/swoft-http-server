@@ -5,7 +5,7 @@ namespace Swoft\Http\Server\Parser;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Helper\JsonHelper;
-use Swoft\Http\Server\Http\Request;
+use Swoft\Http\Message\Server\Request;
 
 /**
  * the json parser of request

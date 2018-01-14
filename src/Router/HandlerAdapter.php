@@ -11,8 +11,8 @@ use Swoft\Http\Server\Exception\RouteNotFoundException;
 use Swoft\Exception\InvalidArgumentException;
 use Swoft\Helper\PhpHelper;
 use Swoft\Router\HandlerAdapterInterface;
-use Swoft\Http\Server\Http\Request;
-use Swoft\Http\Server\Http\Response;
+use Swoft\Http\Message\Server\Request;
+use Swoft\Http\Message\Server\Response;
 
 /**
  * http handler adapter
