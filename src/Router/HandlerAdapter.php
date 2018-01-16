@@ -10,6 +10,7 @@ use Swoft\Http\Server\Exception\MethodNotAllowedException;
 use Swoft\Http\Server\Exception\RouteNotFoundException;
 use Swoft\Exception\InvalidArgumentException;
 use Swoft\Helper\PhpHelper;
+use Swoft\Http\Server\Middleware\AcceptMiddleware;
 use Swoft\Router\HandlerAdapterInterface;
 use Swoft\Http\Message\Server\Request;
 use Swoft\Http\Message\Server\Response;
@@ -71,7 +72,9 @@ class HandlerAdapter implements HandlerAdapterInterface
 
         // response
         if (!$response instanceof Response) {
-            $response = RequestContext::getResponse()->auto($response);
+            /* @var Response $contextResponse*/
+            $contextResponse = RequestContext::getResponse();
+            $response = $contextResponse->withAttribute(AcceptMiddleware::RESPONSE_ATTRIBUTE , $response);
         }
 
         return $response;
