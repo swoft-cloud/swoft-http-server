@@ -4,6 +4,7 @@ namespace Swoft\Http\Server;
 
 use Swoft\App;
 use Swoft\Core\DispatcherInterface;
+use Swoft\Core\ErrorHandler;
 use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
 use Swoft\Http\Server\Event\HttpServerEvent;
@@ -68,10 +69,9 @@ class DispatcherServer implements DispatcherInterface
             $response       = $requestHandler->handle($request);
 
         } catch (\Throwable $throwable) {
-            // Handle by ExceptionHandler
-//            $response = ExceptionHandlerManager::handle($throwable);
-            var_dump($throwable->getMessage(), $throwable->getFile(), $throwable->getCode());
-            $response = RequestContext::getResponse();
+            /* @var ErrorHandler $errorHandler */
+            $errorHandler = App::getBean(ErrorHandler::class);
+            $response = $errorHandler->handle($throwable);
         } finally {
             $this->afterDispatcher($response);
         }
