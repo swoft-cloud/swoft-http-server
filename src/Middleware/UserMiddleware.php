@@ -2,7 +2,7 @@
 
 namespace Swoft\Http\Server\Middleware;
 
-use Interop\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\Bean\Collector\MiddlewareCollector;
@@ -26,7 +26,7 @@ class UserMiddleware implements MiddlewareInterface
      * do middlewares of action
      *
      * @param \Psr\Http\Message\ServerRequestInterface     $request
-     * @param \Interop\Http\Server\RequestHandlerInterface $handler
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
