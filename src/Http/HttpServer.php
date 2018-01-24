@@ -78,6 +78,6 @@ class HttpServer extends AbstractServer
      */
     public function onRequest(Request $request, Response $response)
     {
-        App::getBean('dispatcherServer')->doDispatcher($request, $response);
+        dispatcher_server()->doDispatcher($request, $response);
     }
 }
