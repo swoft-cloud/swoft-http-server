@@ -13,16 +13,8 @@
         "swoft/console": "dev-master"
     },
     "autoload": {
-        "classmap": [
-        ],
         "psr-4": {
             "Swoft\\Http\\Server\\": "src/"
-        },
-        "files": [
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
         }
     },
     "repositories": [
