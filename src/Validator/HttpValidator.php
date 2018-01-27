@@ -8,24 +8,18 @@ use Swoft\Http\Message\Server\Request;
 use Swoft\Validator\AbstractValidator;
 
 /**
- * validator of swoft
- *
+ * Http validator
  * @Bean()
- * @uses      Validator
- * @version   2017年12月03日
- * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
 class HttpValidator extends AbstractValidator
 {
     /**
-     * do validate
+     * validate
      *
      * @param mixed $validators
      * @param array ...$params
-     *
      * @return mixed
+     * @throws \Swoft\Exception\ValidatorException
      */
     public function validate($validators, ...$params)
     {
@@ -35,7 +29,7 @@ class HttpValidator extends AbstractValidator
          */
         list($request, $matches) = $params;
 
-        if (!is_array($validators)) {
+        if (! \is_array($validators)) {
             return $request;
         }
 
@@ -47,23 +41,23 @@ class HttpValidator extends AbstractValidator
     }
 
     /**
-     * validate
+     * Validate field
      *
      * @param Request $request
      * @param array   $matches
      * @param string  $type
      * @param array   $validatorAry
-     *
      * @return mixed
+     * @throws \Swoft\Exception\ValidatorException
      */
     private function validateField($request, array $matches, string $type, array $validatorAry)
     {
-        $get  = $request->getQueryParams();
+        $get = $request->getQueryParams();
         $post = $request->getParsedBody();
         foreach ($validatorAry as $name => $info) {
             $default = array_pop($info['params']);
-            if ($type == ValidatorFrom::GET) {
-                if (!isset($get[$name])) {
+            if ($type === ValidatorFrom::GET) {
+                if (! isset($get[$name])) {
                     $request = $request->addQueryParam($name, $default);
                     continue;
                 }
@@ -71,16 +65,16 @@ class HttpValidator extends AbstractValidator
 
                 continue;
             }
-            if ($type == ValidatorFrom::POST && is_array($post)) {
-                if (!isset($post[$name])) {
+            if ($type === ValidatorFrom::POST && \is_array($post)) {
+                if (! isset($post[$name])) {
                     $request = $request->addParserBody($name, $default);
                     continue;
                 }
                 $this->doValidation($post[$name], $info);
                 continue;
             }
-            if ($type == ValidatorFrom::PATH) {
-                if (!isset($matches[$name])) {
+            if ($type === ValidatorFrom::PATH) {
+                if (! isset($matches[$name])) {
                     continue;
                 }
                 $this->doValidation($matches[$name], $info);
