@@ -2,8 +2,6 @@
 
 namespace SwoftTest\HttpServer;
 
-use SwoftTest\Http\AbstractTestCase;
-
 /**
  *
  *
