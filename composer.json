@@ -9,8 +9,9 @@
   "description": "microservice framework base on swoole",
   "license": "Apache-2.0",
   "require": {
-    "swoft/framework": "dev-component",
-    "swoft/console": "dev-master"
+    "swoft/console": "dev-master",
+    "swoft/http-message": "dev-master",
+    "swoft/framework": "dev-component"
   },
   "autoload": {
     "psr-4": {
@@ -19,7 +20,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Swoft\\Http\\Server\\Test\\": "test"
+      "SwoftTest\\HttpServer\\": "test/Cases"
     }
   },
   "repositories": [
@@ -30,6 +31,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/swoft-cloud/swoft-console"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/swoft-cloud/swoft-http-message"
     },
     {
       "type": "composer",
