@@ -78,6 +78,10 @@ class HttpServer extends AbstractServer
      */
     public function onRequest(Request $request, Response $response)
     {
+        // Initialize Request and Response and set to RequestContent
+        $request = \Swoft\Http\Message\Server\Request::loadFromSwooleRequest($request);
+        $response = new \Swoft\Http\Message\Server\Response($response);
+
         dispatcher_server()->doDispatcher($request, $response);
     }
 }

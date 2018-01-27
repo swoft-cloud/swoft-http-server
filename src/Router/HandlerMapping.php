@@ -26,6 +26,11 @@ use Swoft\Router\HandlerMappingInterface;
 class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
 {
     /**
+     * @var string
+     */
+    public $defaultRouter = '/index/index';
+
+    /**
      * default action
      *
      * @var string
@@ -127,6 +132,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      */
     public function match($path, $method = 'GET')
     {
+        $path = ($path == '/') ? $this->defaultRouter : $path;
         // if enable 'matchAll'
         if ($matchAll = $this->matchAll) {
             if (\is_string($matchAll) && $matchAll{0} === '/') {

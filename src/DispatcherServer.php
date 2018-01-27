@@ -2,11 +2,14 @@
 
 namespace Swoft\Http\Server;
 
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Swoft\App;
 use Swoft\Core\DispatcherInterface;
 use Swoft\Core\ErrorHandler;
 use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
+use Swoft\Http\Message\Server\Request;
 use Swoft\Http\Server\Event\HttpServerEvent;
 use Swoft\Http\Message\Server\Response;
 use Swoft\Http\Server\Middleware\AcceptMiddleware;
@@ -53,14 +56,14 @@ class DispatcherServer implements DispatcherInterface
     public function doDispatcher(...$params)
     {
         /**
-         * @var \Swoole\Http\Request  $swooleRequest
-         * @var \Swoole\Http\Response $swooleResponse
+         * @var RequestInterface  $request
+         * @var ResponseInterface $response
          */
-        list($swooleRequest, $swooleResponse) = $params;
+        list($request, $response) = $params;
 
         try {
             // before dispatcher
-            $this->beforeDispatcher($swooleRequest, $swooleResponse);
+            $this->beforeDispatcher($request, $response);
 
             // request middlewares
             $middlewares    = $this->requestMiddlewares();
@@ -121,12 +124,11 @@ class DispatcherServer implements DispatcherInterface
     /**
      * before dispatcher
      *
-     * @param \Swoole\Http\Request  $request  swoole request
-     * @param \Swoole\Http\Response $response swoole response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      */
-    protected function beforeDispatcher(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
+    protected function beforeDispatcher(RequestInterface $request, ResponseInterface $response)
     {
-        // Initialize Request and Response and set to RequestContent
         RequestContext::setRequest($request);
         RequestContext::setResponse($response);
 
