@@ -36,7 +36,7 @@ class HttpServer extends AbstractServer
     {
         $this->server = new Server($this->httpSetting['host'], $this->httpSetting['port'], $this->httpSetting['model'], $this->httpSetting['type']);
 
-        // Set event callback
+        // Bind event callback
         $this->server->set($this->setting);
         $this->server->on(SwooleEvent::ON_START, [$this, 'onStart']);
         $this->server->on(SwooleEvent::ON_WORKER_START, [$this, 'onWorkerStart']);
