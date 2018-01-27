@@ -23,26 +23,27 @@ use Swoft\Bootstrap\Server\AbstractServer;
 class HttpServer extends AbstractServer
 {
     /**
-     * @var \Swoole\Server::$port tcp监听器
+     * @var \Swoole\Server::$port tcp port
      */
     protected $listen;
 
     /**
-     * 启动Server
+     * Start Server
+     *
+     * @throws \Swoft\Exception\RuntimeException
      */
     public function start()
     {
-        // http server
         $this->server = new Server($this->httpSetting['host'], $this->httpSetting['port'], $this->httpSetting['model'], $this->httpSetting['type']);
 
-        // 设置事件监听
+        // Set event callback
         $this->server->set($this->setting);
         $this->server->on(SwooleEvent::ON_START, [$this, 'onStart']);
         $this->server->on(SwooleEvent::ON_WORKER_START, [$this, 'onWorkerStart']);
         $this->server->on(SwooleEvent::ON_MANAGER_START, [$this, 'onManagerStart']);
         $this->server->on(SwooleEvent::ON_REQUEST, [$this, 'onRequest']);
 
-        // 启动RPC服务
+        // Start RPC Server
         if ((int)$this->serverSetting['tcpable'] === 1) {
             $this->registerRpcEvent();
         }
@@ -53,17 +54,19 @@ class HttpServer extends AbstractServer
     }
 
     /**
-     * register rpc event
+     * Register rpc event, swoft/rpc-server required
+     *
+     * @throws \Swoft\Exception\RuntimeException
      */
     private function registerRpcEvent()
     {
         $swooleListeners = SwooleListenerCollector::getCollector();
-        if (!isset($swooleListeners[SwooleEvent::TYPE_PORT][0]) || empty($swooleListeners[SwooleEvent::TYPE_PORT][0])) {
-            throw new RuntimeException("Please 'composer require swoft/rpc-server'! ");
+        if (! isset($swooleListeners[SwooleEvent::TYPE_PORT][0]) || empty($swooleListeners[SwooleEvent::TYPE_PORT][0])) {
+            throw new RuntimeException("Please use swoft/rpc-server, run 'composer require swoft/rpc-server'");
         }
 
         $this->listen = $this->server->listen($this->tcpSetting['host'], $this->tcpSetting['port'], $this->tcpSetting['type']);
-        $tcpSetting   = $this->getListenTcpSetting();
+        $tcpSetting = $this->getListenTcpSetting();
         $this->listen->set($tcpSetting);
 
         $swooleRpcPortEvents = $swooleListeners[SwooleEvent::TYPE_PORT][0];
@@ -71,7 +74,7 @@ class HttpServer extends AbstractServer
     }
 
     /**
-     * http请求每次会启动一个协程
+     * Each request will create an coroutine
      *
      * @param Request  $request
      * @param Response $response
@@ -82,6 +85,8 @@ class HttpServer extends AbstractServer
         $request = \Swoft\Http\Message\Server\Request::loadFromSwooleRequest($request);
         $response = new \Swoft\Http\Message\Server\Response($response);
 
-        dispatcher_server()->doDispatcher($request, $response);
+        /** @var \Swoft\Http\Server\DispatcherServer $dispatcher */
+        $dispatcher = App::getBean('dispatcherServer');
+        $dispatcher->dispatch($request, $response);
     }
 }
