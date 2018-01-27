@@ -9,51 +9,39 @@ use Swoft\Core\DispatcherInterface;
 use Swoft\Core\ErrorHandler;
 use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
-use Swoft\Http\Message\Server\Request;
-use Swoft\Http\Server\Event\HttpServerEvent;
 use Swoft\Http\Message\Server\Response;
-use Swoft\Http\Server\Middleware\AcceptMiddleware;
-use Swoft\Http\Server\Middleware\FaviconIcoMiddleware;
+use Swoft\Http\Server\Event\HttpServerEvent;
 use Swoft\Http\Server\Middleware\HandlerAdapterMiddleware;
-use Swoft\Http\Server\Middleware\ParserMiddleware;
-use Swoft\Http\Server\Middleware\PoweredByMiddleware;
-use Swoft\Http\Server\Middleware\RouterMiddleware;
+use Swoft\Http\Server\Middleware\SwoftMiddleware;
 use Swoft\Http\Server\Middleware\UserMiddleware;
 use Swoft\Http\Server\Middleware\ValidatorMiddleware;
 
 /**
- * the dispatcher of http server
- *
- * @uses      DispatcherServer
- * @version   2017年11月24日
- * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
+ * The dispatcher of http server
  */
 class DispatcherServer implements DispatcherInterface
 {
     /**
-     * user defined middlewares
+     * User defined middlewares
      *
      * @var array
      */
-    private $middlewares= [];
+    private $middlewares = [];
 
     /**
-     * handler adapter
+     * Handler adapter
      *
      * @var string
      */
     private $handlerAdapter = HandlerAdapterMiddleware::class;
 
     /**
-     * do dispatcher
+     * Do dispatcher
      *
      * @param array ...$params
-     *
-     * @return bool|\Psr\Http\Message\ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function doDispatcher(...$params)
+    public function dispatch(...$params): ResponseInterface
     {
         /**
          * @var RequestInterface  $request
@@ -63,57 +51,52 @@ class DispatcherServer implements DispatcherInterface
 
         try {
             // before dispatcher
-            $this->beforeDispatcher($request, $response);
+            $this->beforeDispatch($request, $response);
 
             // request middlewares
-            $middlewares    = $this->requestMiddlewares();
-            $request        = RequestContext::getRequest();
+            $middlewares = $this->requestMiddleware();
+            $request = RequestContext::getRequest();
             $requestHandler = new RequestHandler($middlewares, $this->handlerAdapter);
-            $response       = $requestHandler->handle($request);
+            $response = $requestHandler->handle($request);
 
         } catch (\Throwable $throwable) {
             /* @var ErrorHandler $errorHandler */
             $errorHandler = App::getBean(ErrorHandler::class);
             $response = $errorHandler->handle($throwable);
-        } finally {
-            $this->afterDispatcher($response);
         }
+        $this->afterDispatch($response);
 
         return $response;
     }
 
     /**
-     * the middlewares of request
+     * The middleware of request
      *
      * @return array
      */
-    public function requestMiddlewares()
+    public function requestMiddleware(): array
     {
-        return array_merge($this->firstMiddleware(), $this->middlewares, $this->lastMiddleware());
+        return array_merge($this->preMiddleware(), $this->middlewares, $this->afterMiddleware());
     }
 
     /**
-     * the firsted middlewares of request
+     * Pre middleware
      *
      * @return array
      */
-    public function firstMiddleware()
+    public function preMiddleware(): array
     {
         return [
-            FaviconIcoMiddleware::class,
-            PoweredByMiddleware::class,
-            ParserMiddleware::class,
-            RouterMiddleware::class,
-            AcceptMiddleware::class,
+            SwoftMiddleware::class,
         ];
     }
 
     /**
-     * the lasted middlewares of request
+     * After middleware
      *
      * @return array
      */
-    public function lastMiddleware()
+    public function afterMiddleware(): array
     {
         return [
             UserMiddleware::class,
@@ -127,7 +110,7 @@ class DispatcherServer implements DispatcherInterface
      * @param RequestInterface  $request
      * @param ResponseInterface $response
      */
-    protected function beforeDispatcher(RequestInterface $request, ResponseInterface $response)
+    protected function beforeDispatch(RequestInterface $request, ResponseInterface $response)
     {
         RequestContext::setRequest($request);
         RequestContext::setResponse($response);
@@ -144,9 +127,9 @@ class DispatcherServer implements DispatcherInterface
      *
      * @param mixed $response
      */
-    protected function afterDispatcher($response)
+    protected function afterDispatch($response)
     {
-        if (!$response instanceof Response) {
+        if (! $response instanceof Response) {
             $response = RequestContext::getResponse()->auto($response);
         }
 
