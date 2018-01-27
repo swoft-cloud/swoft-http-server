@@ -1,51 +1,51 @@
 {
-  "name": "swoft/http-server",
-  "type": "library",
-  "keywords": [
-    "php",
-    "swoole",
-    "swoft"
-  ],
-  "description": "microservice framework base on swoole",
-  "license": "Apache-2.0",
-  "require": {
-    "swoft/console": "dev-master",
-    "swoft/http-message": "dev-master",
-    "swoft/framework": "dev-component"
-  },
-  "autoload": {
-    "psr-4": {
-      "Swoft\\Http\\Server\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "SwoftTest\\HttpServer\\": "test/Cases"
-    }
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/swoft-cloud/framework"
+    "name": "swoft/http-server",
+    "type": "library",
+    "keywords": [
+        "php",
+        "swoole",
+        "swoft"
+    ],
+    "description": "microservice framework base on swoole",
+    "license": "Apache-2.0",
+    "require": {
+        "swoft/console": "dev-master",
+        "swoft/http-message": "dev-master",
+        "swoft/framework": "dev-component"
     },
-    {
-      "type": "vcs",
-      "url": "https://github.com/swoft-cloud/swoft-console"
+    "autoload": {
+        "psr-4": {
+            "Swoft\\Http\\Server\\": "src/"
+        }
     },
-    {
-      "type": "vcs",
-      "url": "https://github.com/swoft-cloud/swoft-http-message"
+    "autoload-dev": {
+        "psr-4": {
+            "SwoftTest\\HttpServer\\": "test/Cases"
+        }
     },
-    {
-      "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/swoft-cloud/framework"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/swoft-cloud/swoft-console"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/swoft-cloud/swoft-http-message"
+        },
+        {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    ],
+    "require-dev": {
+        "eaglewu/swoole-ide-helper": "dev-master",
+        "phpunit/phpunit": "^5.7"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit -c phpunit.xml"
     }
-  ],
-  "require-dev": {
-    "eaglewu/swoole-ide-helper": "dev-master",
-    "phpunit/phpunit": "^5.7"
-  },
-  "scripts": {
-    "test": "./vendor/bin/phpunit -c phpunit.xml"
-  }
 }
