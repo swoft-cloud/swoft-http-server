@@ -85,7 +85,7 @@ class HttpServer extends AbstractServer
         $request = \Swoft\Http\Message\Server\Request::loadFromSwooleRequest($request);
         $response = new \Swoft\Http\Message\Server\Response($response);
 
-        /** @var \Swoft\Http\Server\DispatcherServer $dispatcher */
+        /** @var \Swoft\Http\Server\ServerDispatcher $dispatcher */
         $dispatcher = App::getBean('dispatcherServer');
         $dispatcher->dispatch($request, $response);
     }

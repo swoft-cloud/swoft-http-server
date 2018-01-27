@@ -21,21 +21,26 @@ class RequestMappingParser extends AbstractParserInterface
     /**
      * RequestMapping注解解析
      *
-     * @param string         $className
+     * @param string $className
      * @param RequestMapping $objectAnnotation
-     * @param string         $propertyName
-     * @param string         $methodName
-     *
+     * @param string $propertyName
+     * @param string $methodName
+     * @param null|mixed $propertyValue
      * @return mixed
      */
-    public function parser(string $className, $objectAnnotation = null, string $propertyName = "", string $methodName = "", $propertyValue = null)
-    {
+    public function parser(
+        string $className,
+        $objectAnnotation = null,
+        string $propertyName = '',
+        string $methodName = '',
+        $propertyValue = null
+    ) {
         $collector = ControllerCollector::getCollector();
-        if (!isset($collector[$className])) {
+        if (! isset($collector[$className])) {
             return;
         }
 
-        // collect requestMapping
+        // Collect requestMapping
         ControllerCollector::collect($className, $objectAnnotation, $propertyName, $methodName, $propertyValue);
     }
 }

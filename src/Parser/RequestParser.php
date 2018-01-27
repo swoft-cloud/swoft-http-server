@@ -7,72 +7,62 @@ use Swoft\App;
 use Swoft\Helper\ArrayHelper;
 
 /**
- * the parser of request
- *
- * @uses      RequestParser
- * @version   2017年12月02日
- * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
+ * The parser of request
  */
 class RequestParser implements RequestParserInterface
 {
     /**
-     * the parsers
+     * The parsers
      *
      * @var array
      */
-    private $parsers
-        = [
+    private $parsers = [
 
-        ];
+    ];
 
     /**
-     * the of header
+     * The of header
      *
      * @var string
      */
     private $headerKey = 'Content-type';
 
     /**
-     * parse the request
-     *
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     *
      * @return \Psr\Http\Message\ServerRequestInterface
      */
-    public function parser(ServerRequestInterface $request): ServerRequestInterface
+    public function parse(ServerRequestInterface $request): ServerRequestInterface
     {
         $contentType = $request->getHeaderLine($this->headerKey);
-        $parsers     = $this->mergeParsers();
+        $parsers = $this->mergeParsers();
 
-        if (!isset($parsers[$contentType])) {
+        if (! isset($parsers[$contentType])) {
             return $request;
         }
 
         /* @var \Swoft\Http\Server\Parser\RequestParserInterface $parser */
         $parserBeanName = $parsers[$contentType];
-        $parser         = App::getBean($parserBeanName);
+        $parser = App::getBean($parserBeanName);
 
-        return $parser->parser($request);
+        return $parser->parse($request);
     }
 
     /**
-     * merge default and users parsers
+     * Merge default and users parsers
      *
      * @return array
      */
-    private function mergeParsers()
+    private function mergeParsers(): array
     {
         return ArrayHelper::merge($this->parsers, $this->defaultParsers());
     }
 
     /**
-     * default parsers
+     * Default parsers
      *
      * @return array
      */
-    public function defaultParsers()
+    public function defaultParsers(): array
     {
         return [
             'application/json' => RequestJsonParser::class,

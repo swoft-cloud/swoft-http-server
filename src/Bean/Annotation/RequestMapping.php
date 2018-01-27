@@ -7,7 +7,6 @@ namespace Swoft\Http\Server\Bean\Annotation;
  *
  * @Annotation
  * @Target("METHOD")
- *
  * @uses      RequestMapping
  * @version   2017年08月18日
  * @author    stelin <phpcrazy@126.com>
@@ -87,7 +86,7 @@ class RequestMapping
      *
      * @return array
      */
-    public function getMethod()
+    public function getMethod(): array
     {
         return $this->method;
     }

@@ -20,7 +20,7 @@ class Controller
     /**
      * @var string 控制器前缀
      */
-    private $prefix = "";
+    private $prefix = '';
 
     /**
      * AutoController constructor.

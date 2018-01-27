@@ -8,28 +8,20 @@ use Swoft\Helper\JsonHelper;
 use Swoft\Http\Message\Server\Request;
 
 /**
- * the json parser of request
- *
+ * The json parser of request
  * @Bean()
- * @uses      RequestJsonParser
- * @version   2017年12月02日
- * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
 class RequestJsonParser implements RequestParserInterface
 {
     /**
-     * do parser
-     *
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     *
      * @return \Psr\Http\Message\ServerRequestInterface
+     * @throws \RuntimeException
      */
-    public function parser(ServerRequestInterface $request): ServerRequestInterface
+    public function parse(ServerRequestInterface $request): ServerRequestInterface
     {
         if ($request instanceof Request && strtoupper($request->getMethod()) !== 'GET') {
-            $bodyStream  = $request->getBody();
+            $bodyStream = $request->getBody();
             $bodyContent = $bodyStream->getContents();
             try {
                 $bodyParams = JsonHelper::decode($bodyContent, true);

@@ -19,7 +19,7 @@ use Swoft\Http\Server\Middleware\ValidatorMiddleware;
 /**
  * The dispatcher of http server
  */
-class DispatcherServer implements DispatcherInterface
+class ServerDispatcher implements DispatcherInterface
 {
     /**
      * User defined middlewares

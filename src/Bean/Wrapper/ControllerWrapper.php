@@ -12,7 +12,7 @@ use Swoft\Bean\Annotation\Number;
 use Swoft\Bean\Annotation\Strings;
 use Swoft\Bean\Annotation\Value;
 use Swoft\Bean\Annotation\View;
-use Swoft\Bean\Wrapper\AbstractWrapperInterface;
+use Swoft\Bean\Wrapper\AbstractWrapper;
 use Swoft\Http\Server\Bean\Annotation\Controller;
 use Swoft\Http\Server\Bean\Annotation\RequestMapping;
 
@@ -25,57 +25,53 @@ use Swoft\Http\Server\Bean\Annotation\RequestMapping;
  * @copyright Copyright 2010-2016 swoft software
  * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
-class ControllerWrapper extends AbstractWrapperInterface
+class ControllerWrapper extends AbstractWrapper
 {
     /**
      * 类注解
      *
      * @var array
      */
-    protected $classAnnotations
-        = [
-            Controller::class,
-            Middlewares::class,
-            Middleware::class,
-        ];
+    protected $classAnnotations = [
+        Controller::class,
+        Middlewares::class,
+        Middleware::class,
+    ];
 
     /**
      * 属性注解
      *
      * @var array
      */
-    protected $propertyAnnotations
-        = [
-            Inject::class,
-            Value::class,
-        ];
+    protected $propertyAnnotations = [
+        Inject::class,
+        Value::class,
+    ];
 
     /**
      * 方法注解
      *
      * @var array
      */
-    protected $methodAnnotations
-        = [
-            RequestMapping::class,
-            View::class,
-            Middlewares::class,
-            Middleware::class,
-            Strings::class,
-            Floats::class,
-            Number::class,
-            Integer::class,
-            Enum::class
-        ];
+    protected $methodAnnotations = [
+        RequestMapping::class,
+        View::class,
+        Middlewares::class,
+        Middleware::class,
+        Strings::class,
+        Floats::class,
+        Number::class,
+        Integer::class,
+        Enum::class
+    ];
 
     /**
      * 是否解析类注解
      *
      * @param array $annotations
-     *
      * @return bool
      */
-    public function isParseClassAnnotations(array $annotations)
+    public function isParseClassAnnotations(array $annotations): bool
     {
         return isset($annotations[Controller::class]);
     }
@@ -84,10 +80,9 @@ class ControllerWrapper extends AbstractWrapperInterface
      * 是否解析属性注解
      *
      * @param array $annotations
-     *
      * @return bool
      */
-    public function isParsePropertyAnnotations(array $annotations)
+    public function isParsePropertyAnnotations(array $annotations): bool
     {
         return isset($annotations[Inject::class]) || isset($annotations[Value::class]);
     }
@@ -96,10 +91,9 @@ class ControllerWrapper extends AbstractWrapperInterface
      * 是否解析方法注解
      *
      * @param array $annotations
-     *
      * @return bool
      */
-    public function isParseMethodAnnotations(array $annotations)
+    public function isParseMethodAnnotations(array $annotations): bool
     {
         return true;
     }

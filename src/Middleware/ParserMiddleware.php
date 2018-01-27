@@ -34,7 +34,7 @@ class ParserMiddleware implements MiddlewareInterface
     {
         /* @var \Swoft\Http\Server\Parser\RequestParserInterface $requestParser */
         $requestParser = App::getBean('requestParser');
-        $request       = $requestParser->parser($request);
+        $request       = $requestParser->parse($request);
 
         return $handler->handle($request);
     }
