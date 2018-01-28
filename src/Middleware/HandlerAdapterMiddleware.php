@@ -13,11 +13,6 @@ use Swoft\Middleware\MiddlewareInterface;
  * handler adapter
  *
  * @Bean()
- * @uses      HandlerAdapterMiddleware
- * @version   2017年11月25日
- * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
 class HandlerAdapterMiddleware implements MiddlewareInterface
 {
@@ -33,7 +28,7 @@ class HandlerAdapterMiddleware implements MiddlewareInterface
     {
         $httpHandler = $request->getAttribute(RouterMiddleware::ATTRIBUTE);
 
-        /* @var \Swoft\Router\Http\HandlerAdapter $handlerAdapter */
+        /* @var \Swoft\Http\Server\Router\HandlerAdapter $handlerAdapter */
         $handlerAdapter = App::getBean('httpHandlerAdapter');
         $response       = $handlerAdapter->doHandler($request, $httpHandler);
 

@@ -5,11 +5,16 @@ namespace Swoft\Http\Server\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Swoft\App;
+use Swoft\Bean\Annotation\Bean;
+use Swoft\Http\Server\Exception\NotAcceptableException;
 use Swoft\Middleware\MiddlewareInterface;
 
 
 /**
  * Merge all swoft middleware to this one middleware for performance
+ *
+ * @Bean()
  */
 class SwoftMiddleware implements MiddlewareInterface
 {

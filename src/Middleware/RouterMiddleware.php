@@ -10,6 +10,7 @@ use Swoft\Middleware\MiddlewareInterface;
 
 /**
  * Router middleware
+ *
  * @Bean()
  */
 class RouterMiddleware implements MiddlewareInterface

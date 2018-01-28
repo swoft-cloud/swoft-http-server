@@ -86,7 +86,7 @@ class HttpServer extends AbstractServer
         $response = new \Swoft\Http\Message\Server\Response($response);
 
         /** @var \Swoft\Http\Server\ServerDispatcher $dispatcher */
-        $dispatcher = App::getBean('dispatcherServer');
+        $dispatcher = App::getBean('ServerDispatcher');
         $dispatcher->dispatch($request, $response);
     }
 }
