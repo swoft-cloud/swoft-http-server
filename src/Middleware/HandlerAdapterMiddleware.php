@@ -7,6 +7,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
 use Swoft\Bean\Annotation\Bean;
+use Swoft\Http\Server\AttributeEnum;
+use Swoft\Http\Server\Router\HandlerAdapter;
 use Swoft\Middleware\MiddlewareInterface;
 
 /**
@@ -26,9 +28,9 @@ class HandlerAdapterMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $httpHandler = $request->getAttribute(RouterMiddleware::ATTRIBUTE);
+        $httpHandler = $request->getAttribute(AttributeEnum::ROUTER_ATTRIBUTE);
 
-        /* @var \Swoft\Http\Server\Router\HandlerAdapter $handlerAdapter */
+        /* @var HandlerAdapter $handlerAdapter */
         $handlerAdapter = App::getBean('httpHandlerAdapter');
         $response       = $handlerAdapter->doHandler($request, $httpHandler);
 

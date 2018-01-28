@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Swoft\Bean\Collector\MiddlewareCollector;
 use Swoft\Core\RequestHandler;
 use Swoft\Bean\Annotation\Bean;
+use Swoft\Http\Server\AttributeEnum;
 use Swoft\Middleware\MiddlewareInterface;
 
 /**
@@ -27,15 +28,15 @@ class UserMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $httpHandler = $request->getAttribute(RouterMiddleware::ATTRIBUTE);
+        $httpHandler = $request->getAttribute(AttributeEnum::ROUTER_ATTRIBUTE);
         $info = $httpHandler[2];
 
         $actionMiddlewares = [];
-        if (isset($info['handler']) && is_string($info['handler'])) {
+        if (isset($info['handler']) && \is_string($info['handler'])) {
             // Extract action info from router handler
             $exploded             = explode('@', $info['handler']);
             $controllerClass      = $exploded[0] ?? '';
-            $action               = isset($exploded[1]) ? $exploded[1] : '';
+            $action               = $exploded[1] ?? '';
 
             $collector = MiddlewareCollector::getCollector();
             $collectedMiddlewares = $collector[$controllerClass]['middlewares']??[];

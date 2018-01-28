@@ -4,16 +4,16 @@ namespace Swoft\Http\Server\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
-use Swoft\Core\RequestContext;
 use Swoft\Bean\Annotation\Bean;
-use Swoft\Http\Server\Exception\MethodNotAllowedException;
-use Swoft\Http\Server\Exception\RouteNotFoundException;
+use Swoft\Core\RequestContext;
 use Swoft\Exception\InvalidArgumentException;
 use Swoft\Helper\PhpHelper;
-use Swoft\Http\Server\Middleware\AcceptMiddleware;
-use Swoft\Router\HandlerAdapterInterface;
 use Swoft\Http\Message\Server\Request;
 use Swoft\Http\Message\Server\Response;
+use Swoft\Http\Server\AttributeEnum;
+use Swoft\Http\Server\Exception\MethodNotAllowedException;
+use Swoft\Http\Server\Exception\RouteNotFoundException;
+use Swoft\Router\HandlerAdapterInterface;
 
 /**
  * http handler adapter
@@ -74,7 +74,7 @@ class HandlerAdapter implements HandlerAdapterInterface
         if (!$response instanceof Response) {
             /* @var Response $contextResponse*/
             $contextResponse = RequestContext::getResponse();
-            $response = $contextResponse->withAttribute(AcceptMiddleware::RESPONSE_ATTRIBUTE , $response);
+            $response = $contextResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE , $response);
         }
 
         return $response;

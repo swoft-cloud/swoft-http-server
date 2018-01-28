@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Bean\Collector\ValidatorCollector;
+use Swoft\Http\Server\AttributeEnum;
 use Swoft\Middleware\MiddlewareInterface;
 use Swoft\Http\Server\Validator\HttpValidator;
 
@@ -26,19 +27,21 @@ class ValidatorMiddleware implements MiddlewareInterface
     /**
      * do process
      *
-     * @param \Psr\Http\Message\ServerRequestInterface     $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Server\RequestHandlerInterface $handler
      *
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Swoft\Exception\ValidatorException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $httpHandler = $request->getAttribute(RouterMiddleware::ATTRIBUTE);
+        $httpHandler = $request->getAttribute(AttributeEnum::ROUTER_ATTRIBUTE);
         $info        = $httpHandler[2];
-        if (isset($info['handler']) && is_string($info['handler'])) {
+
+        if (isset($info['handler']) && \is_string($info['handler'])) {
             $exploded     = explode('@', $info['handler']);
             $className    = $exploded[0] ?? '';
-            $validatorKey = isset($exploded[1]) ? $exploded[1] : '';
+            $validatorKey = $exploded[1] ?? '';
             $matches      = $info['matches']??[];
 
             /* @var HttpValidator $validator */

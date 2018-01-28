@@ -12,6 +12,7 @@ use Swoft\Middleware\MiddlewareInterface;
 
 
 /**
+ * @Bean()
  * Merge all swoft middleware to this one middleware for performance
  *
  * @Bean()
@@ -28,6 +29,7 @@ class SwoftMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Server\RequestHandlerInterface $handler
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Swoft\Http\Server\Exception\NotAcceptableException
      * @throws \InvalidArgumentException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -35,8 +37,8 @@ class SwoftMiddleware implements MiddlewareInterface
         /**
          * Fix Chrome ico request bug
          */
-        if ($request->getUri()->getPath() == '/favicon.ico') {
-            throw new NotAcceptableException();
+        if ($request->getUri()->getPath() === '/favicon.ico') {
+            throw new NotAcceptableException('access favicon.ico');
         }
 
         /**

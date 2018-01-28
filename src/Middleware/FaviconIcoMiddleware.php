@@ -28,16 +28,17 @@ class FaviconIcoMiddleware implements MiddlewareInterface
      * Process an incoming server request and return a response, optionally delegating
      * response creation to a handler.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface     $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Server\RequestHandlerInterface $handler
      *
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Swoft\Http\Server\Exception\NotAcceptableException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // Fix Chrome ico request bug
-        if ($request->getUri()->getPath() == '/favicon.ico') {
-            throw new NotAcceptableException();
+        if ($request->getUri()->getPath() === '/favicon.ico') {
+            throw new NotAcceptableException('access favicon.ico');
         }
 
         return $handler->handle($request);
