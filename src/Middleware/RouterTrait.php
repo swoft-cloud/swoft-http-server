@@ -9,25 +9,21 @@
 
 namespace Swoft\Http\Server\Middleware;
 
-
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
+use Swoft\Http\Server\AttributeEnum;
 
+/**
+ * Trait RouterTrait
+ * @package Swoft\Http\Server\Middleware
+ */
 trait RouterTrait
 {
-
     /**
-     * The attribute of Router
-     *
-     * @var string
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
      */
-    protected $routerAttribute = 'requestHandler';
-
-    /**
-     * @param \Psr\Http\Message\RequestInterface $request
-     * @return \Psr\Http\Message\RequestInterface
-     */
-    protected function handleRouter(RequestInterface $request): RequestInterface
+    protected function handleRouter(ServerRequestInterface $request): ServerRequestInterface
     {
         $path = $request->getUri()->getPath();
         $method = $request->getMethod();
@@ -35,7 +31,8 @@ trait RouterTrait
         /* @var \Swoft\Http\Server\Router\HandlerMapping $httpRouter */
         $httpRouter = App::getBean('httpRouter');
         $httpHandler = $httpRouter->getHandler($path, $method);
-        $request = $request->withAttribute($this->routerAttribute, $httpHandler);
+        $request = $request->withAttribute(AttributeEnum::ROUTER_ATTRIBUTE, $httpHandler);
+
         return $request;
     }
 

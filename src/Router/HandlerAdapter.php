@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
 use Swoft\Core\RequestContext;
 use Swoft\Bean\Annotation\Bean;
+use Swoft\Http\Server\AttributeEnum;
 use Swoft\Http\Server\Exception\MethodNotAllowedException;
 use Swoft\Http\Server\Exception\RouteNotFoundException;
 use Swoft\Exception\InvalidArgumentException;
@@ -74,7 +75,7 @@ class HandlerAdapter implements HandlerAdapterInterface
         if (!$response instanceof Response) {
             /* @var Response $contextResponse*/
             $contextResponse = RequestContext::getResponse();
-            $response = $contextResponse->withAttribute(AcceptMiddleware::RESPONSE_ATTRIBUTE , $response);
+            $response = $contextResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE , $response);
         }
 
         return $response;

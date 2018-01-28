@@ -16,6 +16,8 @@ class RouterMiddleware implements MiddlewareInterface
 {
     use RouterTrait;
 
+    const ATTRIBUTE = 'requestHandler';
+
     /**
      * request router
      *

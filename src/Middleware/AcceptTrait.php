@@ -5,18 +5,14 @@ namespace Swoft\Http\Server\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\Http\Message\Server\Response;
+use Swoft\Http\Server\AttributeEnum;
 
-
+/**
+ * Trait AcceptTrait
+ * @package Swoft\Http\Server\Middleware
+ */
 trait AcceptTrait
 {
-
-    /**
-     * The attribute of response data
-     *
-     * @var string
-     */
-    protected $responseAttribute = 'responseAttribute';
-
     /**
      * Json format accept
      *
@@ -38,22 +34,22 @@ trait AcceptTrait
         }
 
         // View
-        $content = $response->getAttribute($this->responseAttribute);
+        $content = $response->getAttribute(AttributeEnum::RESPONSE_ATTRIBUTE);
         if ($content === null) {
             return $response;
         }
 
         $accepts = $request->getHeader('accept');
         $currentAccept = current($accepts);
-        $data = $response->getAttribute($this->responseAttribute);
+        $data = $response->getAttribute(AttributeEnum::RESPONSE_ATTRIBUTE);
 
         if (empty($currentAccept)) {
             if ($response->isArrayable($data)) {
                 $response = $response->json($data);
                 return $response;
-            } else {
-                return $response->raw((string)$data);
             }
+
+            return $response->raw((string)$data);
         }
 
         $isJson = $response->isMatchAccept($currentAccept, $this->acceptJson);
