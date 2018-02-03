@@ -3,7 +3,7 @@
 namespace Swoft\Http\Server\Bootstrap;
 
 use Swoft\Bean\Annotation\BootBean;
-use Swoft\Core\BootBeanIntereface;
+use Swoft\Core\BootBeanInterface;
 use Swoft\Http\Server\Parser\RequestParser;
 use Swoft\Http\Server\Router\HandlerMapping;
 use Swoft\Http\Server\ServerDispatcher;
@@ -13,7 +13,7 @@ use Swoft\Http\Server\ServerDispatcher;
  *
  * @BootBean()
  */
-class CoreBean implements BootBeanIntereface
+class CoreBean implements BootBeanInterface
 {
     /**
      * @return array
