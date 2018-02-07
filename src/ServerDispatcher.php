@@ -5,7 +5,7 @@ namespace Swoft\Http\Server;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Swoft\App;
-use Swoft\Core\DispatcherInterface;
+use Swoft\Contract\DispatcherInterface;
 use Swoft\Core\ErrorHandler;
 use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
