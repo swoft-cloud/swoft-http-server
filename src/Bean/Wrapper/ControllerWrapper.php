@@ -11,7 +11,6 @@ use Swoft\Bean\Annotation\Middlewares;
 use Swoft\Bean\Annotation\Number;
 use Swoft\Bean\Annotation\Strings;
 use Swoft\Bean\Annotation\Value;
-use Swoft\Bean\Annotation\View;
 use Swoft\Bean\Wrapper\AbstractWrapper;
 use Swoft\Http\Server\Bean\Annotation\Controller;
 use Swoft\Http\Server\Bean\Annotation\RequestMapping;
@@ -55,7 +54,6 @@ class ControllerWrapper extends AbstractWrapper
      */
     protected $methodAnnotations = [
         RequestMapping::class,
-        View::class,
         Middlewares::class,
         Middleware::class,
         Strings::class,
