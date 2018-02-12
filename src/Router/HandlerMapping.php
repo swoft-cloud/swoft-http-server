@@ -132,7 +132,6 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      */
     public function match($path, $method = 'GET')
     {
-        $path = ($path == '/') ? $this->defaultRouter : $path;
         // if enable 'matchAll'
         if ($matchAll = $this->matchAll) {
             if (\is_string($matchAll) && $matchAll{0} === '/') {
@@ -161,7 +160,6 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
         }
 
         $first = $this->getFirstFromPath($path);
-        // $nodeCount = substr_count(trim($path), '/');
         $allowedMethods = [];
 
         // is a regular dynamic route(the first node is 1th level index key).
@@ -372,6 +370,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
             $controllerPrefix = $mapping['prefix'];
             $controllerPrefix = $this->getControllerPrefix($controllerPrefix, $className);
             $routes           = $mapping['routes'];
+
             // 注册控制器对应的一组路由
             $this->registerRoute($className, $routes, $controllerPrefix);
         }
@@ -379,10 +378,11 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
 
     /**
      * 注册路由
-     *
-     * @param string $className        类名
-     * @param array  $routes           控制器对应的路由组
+     * @param string $className 类名
+     * @param array $routes 控制器对应的路由组
      * @param string $controllerPrefix 控制器prefix
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
      */
     private function registerRoute(string $className, array $routes, string $controllerPrefix)
     {
@@ -403,7 +403,9 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
             $handler = $className . '@' . $action;
 
             // 注入路由规则
-            $this->map($method, $uri, $handler, []);
+            $this->map($method, $uri, $handler, [
+                'params' => $route['params'] ?? []
+            ]);
         }
     }
 
