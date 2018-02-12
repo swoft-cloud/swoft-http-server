@@ -33,8 +33,8 @@ class ControllerCollector implements CollectorInterface
     public static function collect(
         string $className,
         $objectAnnotation = null,
-        string $propertyName = "",
-        string $methodName = "",
+        string $propertyName = '',
+        string $methodName = '',
         $propertyValue = null
     ) {
         if ($objectAnnotation instanceof Controller) {
@@ -49,14 +49,15 @@ class ControllerCollector implements CollectorInterface
             self::$requestMapping[$className]['routes'][] = [
                 'route'  => $route,
                 'method' => $httpMethod,
-                'action' => $methodName
+                'action' => $methodName,
+                'params' => $objectAnnotation->getParams(),
             ];
             return;
         }
 
         if ($objectAnnotation === null && isset(self::$requestMapping[$className])) {
             self::$requestMapping[$className]['routes'][] = [
-                'route'  => "",
+                'route'  => '',
                 'method' => [RequestMethod::GET, RequestMethod::POST],
                 'action' => $methodName,
             ];

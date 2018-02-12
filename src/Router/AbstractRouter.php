@@ -312,14 +312,6 @@ abstract class AbstractRouter implements RouterInterface
             return $m;
         }, (array)$methods);
 
-        // if (!\is_string($handler) && !\is_object($handler)) {
-        //     throw new \InvalidArgumentException('The route handler is not empty and type only allow: string,object');
-        // }
-        //
-        // if (\is_object($handler) && !\is_callable($handler)) {
-        //     throw new \InvalidArgumentException('The route object handler must be is callable');
-        // }
-
         $methods = implode(',', $methods) . ',';
 
         if (false !== strpos($methods, self::ANY)) {
@@ -334,7 +326,7 @@ abstract class AbstractRouter implements RouterInterface
      * @param string $route
      * @return bool
      */
-    public static function isStaticRoute($route)
+    public static function isStaticRoute(string $route): bool
     {
         return strpos($route, '{') === false && strpos($route, '[') === false;
     }
@@ -343,7 +335,7 @@ abstract class AbstractRouter implements RouterInterface
      * @param string $path
      * @return string
      */
-    protected function getFirstFromPath($path)
+    protected function getFirstFromPath(string $path): string
     {
         $tmp = trim($path, '/'); // clear first,end '/'
 
@@ -365,7 +357,7 @@ abstract class AbstractRouter implements RouterInterface
      * @param bool $ignoreLastSlash
      * @return string
      */
-    protected function formatUriPath($path, $ignoreLastSlash)
+    protected function formatUriPath(string $path, $ignoreLastSlash): string
     {
         // clear '//', '///' => '/'
         $path = rawurldecode(preg_replace('#\/\/+#', '/', $path));
@@ -383,7 +375,7 @@ abstract class AbstractRouter implements RouterInterface
      * @param array $conf
      * @return array
      */
-    protected function filterMatches(array $matches, array $conf)
+    protected function filterMatches(array $matches, array $conf): array
     {
         // clear all int key
         $matches = array_filter($matches, '\is_string', ARRAY_FILTER_USE_KEY);
@@ -408,7 +400,7 @@ abstract class AbstractRouter implements RouterInterface
      * @return array
      * @throws \LogicException
      */
-    public function parseParamRoute($route, array $params, array $conf)
+    public function parseParamRoute(string $route, array $params, array $conf): array
     {
         $bak = $route;
         $noOptional = null;
@@ -518,7 +510,7 @@ abstract class AbstractRouter implements RouterInterface
      * @internal string $sfx controller suffix. eg: 'Controller'
      * @return bool|callable
      */
-    public function matchAutoRoute($path)
+    public function matchAutoRoute(string $path)
     {
         if (!$cnp = trim($this->controllerNamespace)) {
             return false;
@@ -579,7 +571,7 @@ abstract class AbstractRouter implements RouterInterface
      * @param array $tmpParams
      * @return array
      */
-    public function getAvailableParams(array $tmpParams)
+    public function getAvailableParams(array $tmpParams): array
     {
         $params = self::$globalParams;
 
