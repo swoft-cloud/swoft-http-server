@@ -8,12 +8,12 @@ use Swoft\Bean\Annotation\Bean;
 use Swoft\Core\RequestContext;
 use Swoft\Exception\InvalidArgumentException;
 use Swoft\Helper\PhpHelper;
+use Swoft\Http\Message\Router\HandlerAdapterInterface;
 use Swoft\Http\Message\Server\Request;
 use Swoft\Http\Message\Server\Response;
 use Swoft\Http\Server\AttributeEnum;
 use Swoft\Http\Server\Exception\MethodNotAllowedException;
 use Swoft\Http\Server\Exception\RouteNotFoundException;
-use Swoft\Router\HandlerAdapterInterface;
 
 /**
  * http handler adapter

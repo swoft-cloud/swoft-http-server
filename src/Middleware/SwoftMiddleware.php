@@ -8,7 +8,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Swoft\App;
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Http\Server\Exception\NotAcceptableException;
-use Swoft\Middleware\MiddlewareInterface;
+use Swoft\Http\Message\Middleware\MiddlewareInterface;
 
 
 /**

@@ -7,9 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoft\App;
 use Swoft\Bean\Annotation\Bean;
+use Swoft\Http\Message\Middleware\MiddlewareInterface;
 use Swoft\Http\Server\AttributeEnum;
 use Swoft\Http\Server\Router\HandlerAdapter;
-use Swoft\Middleware\MiddlewareInterface;
 
 /**
  * handler adapter

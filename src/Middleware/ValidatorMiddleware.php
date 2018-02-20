@@ -9,7 +9,7 @@ use Swoft\App;
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Bean\Collector\ValidatorCollector;
 use Swoft\Http\Server\AttributeEnum;
-use Swoft\Middleware\MiddlewareInterface;
+use Swoft\Http\Message\Middleware\MiddlewareInterface;
 use Swoft\Http\Server\Validator\HttpValidator;
 
 /**

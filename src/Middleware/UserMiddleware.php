@@ -9,7 +9,7 @@ use Swoft\Bean\Collector\MiddlewareCollector;
 use Swoft\Core\RequestHandler;
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Http\Server\AttributeEnum;
-use Swoft\Middleware\MiddlewareInterface;
+use Swoft\Http\Message\Middleware\MiddlewareInterface;
 
 /**
  * the annotation middlewares of action

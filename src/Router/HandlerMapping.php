@@ -2,7 +2,7 @@
 
 namespace Swoft\Http\Server\Router;
 
-use Swoft\Router\HandlerMappingInterface;
+use Swoft\Http\Message\Router\HandlerMappingInterface;
 
 /**
  * handler mapping of http
