@@ -5,7 +5,7 @@ namespace Swoft\Http\Server\Middleware;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Swoft\Bean\Collector\MiddlewareCollector;
+use Swoft\Http\Message\Bean\Collector\MiddlewareCollector;
 use Swoft\Core\RequestHandler;
 use Swoft\Bean\Annotation\Bean;
 use Swoft\Http\Server\AttributeEnum;
