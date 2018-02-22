@@ -11,7 +11,7 @@
     "require": {
         "swoft/console": "dev-master",
         "swoft/http-message": "dev-master",
-        "swoft/framework": "dev-component"
+        "swoft/framework": "dev-master"
     },
     "autoload": {
         "psr-4": {
