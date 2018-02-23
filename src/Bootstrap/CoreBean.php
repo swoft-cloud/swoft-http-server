@@ -21,7 +21,7 @@ class CoreBean implements BootBeanInterface
     public function beans()
     {
         return [
-            'ServerDispatcher' => [
+            'serverDispatcher' => [
                 'class' => ServerDispatcher::class,
             ],
             'httpRouter'       => [
