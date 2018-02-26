@@ -98,12 +98,12 @@ class ServerCommand
             output()->writeln('<error>The server is not running! cannot reload</error>', true, true);
         }
 
-        output()->writeln("<info>Server {input()->getFullScript()} is reloading</info>");
+        output()->writeln(sprintf('<info>Server %s is reloading</info>', input()->getFullScript()));
 
         // 重载
         $reloadTask = input()->hasOpt('t');
         $httpServer->reload($reloadTask);
-        output()->writeln("<success>Server {input()->getFullScript()} reload success</success>");
+        output()->writeln(sprintf('<success>Server %s reload success</success>', input()->getFullScript()));
     }
 
     /**
@@ -129,16 +129,16 @@ class ServerCommand
         $pidFile = $serverStatus['pfile'];
 
         @unlink($pidFile);
-        output()->writeln("<info>Swoft {input()->getFullScript()} is stopping ...</info>");
+        output()->writeln(sprintf('<info>Swoft %s is stopping ...</info>', input()->getFullScript()));
 
         $result = $httpServer->stop();
 
         // 停止失败
         if (!$result) {
-            output()->writeln("<error>Swoft {input()->getFullScript()} stop fail</error>", true, true);
+            output()->writeln(sprintf('<error>Swoft %s stop fail</error>', input()->getFullScript()), true, true);
         }
 
-        output()->writeln("<success>Swoft {input()->getFullScript()} stop success!</success>");
+        output()->writeln(sprintf('<success>Swoft %s stop success!</success>', input()->getFullScript()));
     }
 
     /**
