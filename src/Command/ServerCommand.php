@@ -7,34 +7,27 @@ use Swoft\Helper\EnvHelper;
 use Swoft\Http\Server\Http\HttpServer;
 
 /**
- * the group command list of http-server
+ * The group command list of HTTP-Server
  *
  * @Command(coroutine=false,server=true)
- * @uses      ServerCommand
- * @version   2017年10月06日
- * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
 class ServerCommand
 {
     /**
-     * start http server
+     * Start http server
      *
-     * @Usage
-     * server:{command} [arguments] [options]
-     *
+     * @Usage server:{command} [arguments] [options]
      * @Options
      * -d,--d start by daemonized process
-     *
-     * @Example
-     * php swoft.php server:start -d -r
+     * @Example php swoft.php server:start -d -r
+     * @throws \Swoft\Exception\RuntimeException
+     * @throws \RuntimeException
      */
     public function start()
     {
         $httpServer = $this->getHttpServer();
 
-        // sever配置参数
+        // Sever 配置参数
         $serverStatus = $httpServer->getServerSetting();
 
         // 是否正在运行
@@ -47,16 +40,16 @@ class ServerCommand
         $httpStatus = $httpServer->getHttpSetting();
         $tcpStatus = $httpServer->getTcpSetting();
 
-        // setting
+        // Setting
         $workerNum = $httpServer->setting['worker_num'];
 
-        // http启动参数
+        // HTTP 启动参数
         $httpHost = $httpStatus['host'];
         $httpPort = $httpStatus['port'];
         $httpModel = $httpStatus['model'];
         $httpType = $httpStatus['type'];
 
-        // tcp启动参数
+        // TCP 启动参数
         $tcpEnable = $serverStatus['tcpable'];
         $tcpHost = $tcpStatus['host'];
         $tcpPort = $tcpStatus['port'];
@@ -78,16 +71,13 @@ class ServerCommand
     }
 
     /**
-     * reload worker process
+     * Reload worker process
      *
-     * @Usage
-     * server:{command} [arguments] [options]
-     *
+     * @Usage server:{command} [arguments] [options]
      * @Options
      * -t only to reload task processes, default to reload worker and task
-     *
-     * @Example
-     * php swoft.php server:reload
+     * @Example php swoft.php server:reload
+     * @throws \RuntimeException
      */
     public function reload()
     {
@@ -98,22 +88,20 @@ class ServerCommand
             output()->writeln('<error>The server is not running! cannot reload</error>', true, true);
         }
 
-        output()->writeln("<info>Server {input()->getFullScript()} is reloading</info>");
+        output()->writeln(sprintf('<info>Server %s is reloading</info>', input()->getScript()));
 
         // 重载
         $reloadTask = input()->hasOpt('t');
         $httpServer->reload($reloadTask);
-        output()->writeln("<success>Server {input()->getFullScript()} reload success</success>");
+        output()->writeln(sprintf('<success>Server %s reload success</success>', input()->getScript()));
     }
 
     /**
-     * stop http server
+     * Stop http server
      *
-     * @Usage
-     * server:{command} [arguments] [options]
-     *
-     * @Example
-     * php swoft.php server:stop
+     * @Usage server:{command} [arguments] [options]
+     * @Example php swoft.php server:stop
+     * @throws \RuntimeException
      */
     public function stop()
     {
@@ -129,26 +117,24 @@ class ServerCommand
         $pidFile = $serverStatus['pfile'];
 
         @unlink($pidFile);
-        output()->writeln("<info>Swoft {input()->getFullScript()} is stopping ...</info>");
+        output()->writeln(sprintf('<info>Swoft %s is stopping ...</info>', input()->getScript()));
 
         $result = $httpServer->stop();
 
         // 停止失败
         if (!$result) {
-            output()->writeln("<error>Swoft {input()->getFullScript()} stop fail</error>", true, true);
+            output()->writeln(sprintf('<error>Swoft %s stop fail</error>', input()->getScript()), true, true);
         }
 
-        output()->writeln("<success>Swoft {input()->getFullScript()} stop success!</success>");
+        output()->writeln(sprintf('<success>Swoft %s stop success!</success>', input()->getScript()));
     }
 
     /**
-     * restart http server
+     * Restart http server
      *
-     * @Usage
-     * server:{command} [arguments] [options]
-     *
-     * @Example
-     * php swoft.php server:restart
+     * @Usage server:{command} [arguments] [options]
+     * @Example php swoft.php server:restart
+     * @throws \RuntimeException
      */
     public function restart()
     {
@@ -166,8 +152,9 @@ class ServerCommand
 
     /**
      * @return HttpServer
+     * @throws \RuntimeException
      */
-    private function getHttpServer()
+    private function getHttpServer(): HttpServer
     {
         // check env
         EnvHelper::check();
