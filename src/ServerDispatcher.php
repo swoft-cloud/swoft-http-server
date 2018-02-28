@@ -9,6 +9,7 @@ use Swoft\Contract\DispatcherInterface;
 use Swoft\Core\ErrorHandler;
 use Swoft\Core\RequestContext;
 use Swoft\Core\RequestHandler;
+use Swoft\Event\AppEvent;
 use Swoft\Http\Message\Server\Response;
 use Swoft\Http\Server\Event\HttpServerEvent;
 use Swoft\Http\Server\Middleware\HandlerAdapterMiddleware;
@@ -136,7 +137,11 @@ class ServerDispatcher implements DispatcherInterface
         // Handle Response
         $response->send();
 
+        // Release system resources
+        App::trigger(AppEvent::RESOURCE_RELEASE);
+
         // Trigger 'After Request' event
         App::trigger(HttpServerEvent::AFTER_REQUEST);
     }
+
 }
