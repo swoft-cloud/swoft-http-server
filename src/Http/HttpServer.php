@@ -44,7 +44,7 @@ class HttpServer extends AbstractServer
         }
 
         $this->registerSwooleServerEvents();
-        $this->beforeStart();
+        $this->beforeServerStart();
         $this->server->start();
     }
 
@@ -69,6 +69,7 @@ class HttpServer extends AbstractServer
     }
 
     /**
+     * onRequest event callback
      * Each request will create an coroutine
      *
      * @param Request  $request
