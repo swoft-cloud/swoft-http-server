@@ -46,7 +46,7 @@ class ServerCommand
         // HTTP 启动参数
         $httpHost = $httpStatus['host'];
         $httpPort = $httpStatus['port'];
-        $httpModel = $httpStatus['model'];
+        $httpMode = $httpStatus['mode'];
         $httpType = $httpStatus['type'];
 
         // TCP 启动参数
@@ -60,7 +60,7 @@ class ServerCommand
         $lines = [
             '                         Information Panel                     ',
             '******************************************************************',
-            "* http | Host: <note>$httpHost</note>, port: <note>$httpPort</note>, Model: <note>$httpModel</note>, type: <note>$httpType</note>, Worker: <note>$workerNum</note>",
+            "* http | Host: <note>$httpHost</note>, port: <note>$httpPort</note>, Model: <note>$httpMode</note>, type: <note>$httpType</note>, Worker: <note>$workerNum</note>",
             "* tcp  | Enable: <note>$tcpEnable</note>, host: <note>$tcpHost</note>, port: <note>$tcpPort</note>, type: <note>$tcpType</note>, Worker: <note>$workerNum</note>",
             '******************************************************************',
         ];
