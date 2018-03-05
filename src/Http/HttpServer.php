@@ -28,7 +28,7 @@ class HttpServer extends AbstractServer
      */
     public function start()
     {
-        $this->server = new Server($this->httpSetting['host'], $this->httpSetting['port'], $this->httpSetting['model'], $this->httpSetting['type']);
+        $this->server = new Server($this->httpSetting['host'], $this->httpSetting['port'], $this->httpSetting['mode'], $this->httpSetting['type']);
 
         // Bind event callback
         $this->server->set($this->setting);
