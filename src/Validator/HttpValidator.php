@@ -14,20 +14,19 @@ use Swoft\Validator\AbstractValidator;
 class HttpValidator extends AbstractValidator
 {
     /**
-     * validate
+     * Validate
      *
-     * @param mixed $validators
      * @param array ...$params
      * @return mixed
      * @throws \Swoft\Exception\ValidatorException
      */
-    public function validate($validators, ...$params)
+    public function validate(...$params)
     {
         /**
          * @var Request $request
          * @var array   $matches
          */
-        list($request, $matches) = $params;
+        list($validators, $request, $matches) = $params;
 
         if (! \is_array($validators)) {
             return $request;
@@ -61,7 +60,7 @@ class HttpValidator extends AbstractValidator
                     $request = $request->addQueryParam($name, $default);
                     continue;
                 }
-                $this->doValidation($get[$name], $info);
+                $this->doValidation($name, $get[$name], $info);
 
                 continue;
             }
@@ -70,14 +69,14 @@ class HttpValidator extends AbstractValidator
                     $request = $request->addParserBody($name, $default);
                     continue;
                 }
-                $this->doValidation($post[$name], $info);
+                $this->doValidation($name, $post[$name], $info);
                 continue;
             }
             if ($type === ValidatorFrom::PATH) {
                 if (! isset($matches[$name])) {
                     continue;
                 }
-                $this->doValidation($matches[$name], $info);
+                $this->doValidation($name, $matches[$name], $info);
                 continue;
             }
         }
