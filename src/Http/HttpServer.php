@@ -56,7 +56,7 @@ class HttpServer extends AbstractServer
      *
      * @throws \Swoft\Exception\RuntimeException
      */
-    private function registerRpcEvent()
+    protected function registerRpcEvent()
     {
         $swooleListeners = SwooleListenerCollector::getCollector();
 

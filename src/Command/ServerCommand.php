@@ -79,6 +79,7 @@ class ServerCommand
      * @Options
      *  -t      Only to reload task processes, default to reload worker and task
      * @Example {fullCommand}
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
     public function reload()
@@ -111,7 +112,7 @@ class ServerCommand
 
         // 是否已启动
         if (!$httpServer->isRunning()) {
-            output()->writeln('<error>The server is not running! cannot stop</error>', true, true);
+            \output()->writeln('<error>The server is not running! cannot stop</error>', true, true);
         }
 
         // pid文件
@@ -119,13 +120,13 @@ class ServerCommand
         $pidFile = $serverStatus['pfile'];
 
         @unlink($pidFile);
-        output()->writeln(sprintf('<info>Swoft %s is stopping ...</info>', input()->getScript()));
+        \output()->writeln(sprintf('<info>Swoft %s is stopping ...</info>', input()->getScript()));
 
         $result = $httpServer->stop();
 
         // 停止失败
         if (!$result) {
-            output()->writeln(sprintf('<error>Swoft %s stop fail</error>', input()->getScript()), true, true);
+            \output()->writeln(sprintf('<error>Swoft %s stop fail</error>', input()->getScript()), true, true);
         }
 
         output()->writeln(sprintf('<success>Swoft %s stop success!</success>', input()->getScript()));
@@ -140,6 +141,7 @@ class ServerCommand
      * @Example
      *   {fullCommand}
      *   {fullCommand} -d
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
     public function restart()
@@ -158,6 +160,7 @@ class ServerCommand
 
     /**
      * @return HttpServer
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
     private function getHttpServer(): HttpServer

@@ -29,7 +29,6 @@ class RequestMapping
      */
     private $method = [RequestMethod::GET, RequestMethod::POST];
 
-
     /**
      * {"id"="\d+"}
      * @var array
@@ -76,7 +75,7 @@ class RequestMapping
      *
      * @return string
      */
-    public function getRoute()
+    public function getRoute(): string
     {
         return $this->route;
     }
