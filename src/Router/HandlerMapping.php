@@ -25,18 +25,6 @@ use Swoft\Http\Message\Router\HandlerMappingInterface;
  */
 class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
 {
-    /**
-     * @var string
-     */
-    public $defaultRouter = '/index/index';
-
-    /**
-     * default action
-     *
-     * @var string
-     */
-    public $defaultAction = 'index';
-
     /** @var int */
     private $routeCounter = 0;
     private $cacheCounter = 0;
@@ -130,7 +118,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      * @param string $path
      * @return array
      */
-    public function match($path, $method = 'GET')
+    public function match($path, $method = 'GET'): array
     {
         // if enable 'matchAll'
         if ($matchAll = $this->matchAll) {

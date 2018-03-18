@@ -86,10 +86,10 @@ interface RouterInterface
      *  [self::FOUND, $path, array () // routeData ]
      *
      */
-    public function match($path, $method = 'GET');
+    public function match($path, $method = 'GET'): array;
 
     /**
      * @return array
      */
-    public static function getSupportedMethods();
+    public static function getSupportedMethods(): array;
 }

@@ -635,7 +635,7 @@ abstract class AbstractRouter implements RouterInterface
     /**
      * @return array
      */
-    public static function getSupportedMethods()
+    public static function getSupportedMethods(): array
     {
         return self::SUPPORTED_METHODS;
     }
