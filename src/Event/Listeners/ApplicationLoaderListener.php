@@ -9,7 +9,7 @@ use Swoft\Event\EventInterface;
 use Swoft\Http\Server\Bean\Collector\ControllerCollector;
 
 /**
- * the listener of applicatioin loader
+ * the listener of application loader
  *
  * @Listener(AppEvent::APPLICATION_LOADER)
  * @uses      ApplicationLoaderListener
@@ -22,6 +22,8 @@ class ApplicationLoaderListener implements EventHandlerInterface
 {
     /**
      * @param \Swoft\Event\EventInterface $event
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
      */
     public function handle(EventInterface $event)
     {
@@ -31,5 +33,4 @@ class ApplicationLoaderListener implements EventHandlerInterface
         $requestMapping = ControllerCollector::getCollector();
         $httpRouter->registerRoutes($requestMapping);
     }
-
 }

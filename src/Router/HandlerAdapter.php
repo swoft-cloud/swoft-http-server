@@ -32,8 +32,10 @@ class HandlerAdapter implements HandlerAdapterInterface
      * @param ServerRequestInterface $request request object
      * @param array $routeInfo handler info
      * @return Response
+     * @throws \InvalidArgumentException
      * @throws \Swoft\Http\Server\Exception\MethodNotAllowedException
      * @throws \Swoft\Http\Server\Exception\RouteNotFoundException
+     * @throws \ReflectionException
      */
     public function doHandler(ServerRequestInterface $request, array $routeInfo)
     {
@@ -89,7 +91,7 @@ class HandlerAdapter implements HandlerAdapterInterface
      * @return array
      * @throws \InvalidArgumentException
      */
-    public function createHandler(string $path, array $info)
+    public function createHandler(string $path, array $info): array
     {
         $handler = $info['handler'];
         $matches = $info['matches'] ?? [];
@@ -139,8 +141,9 @@ class HandlerAdapter implements HandlerAdapterInterface
      * @param array $handler handler info
      *
      * @return array
+     * @throws \Swoft\Exception\InvalidArgumentException
      */
-    private function defaultHandler(array $handler)
+    private function defaultHandler(array $handler): array
     {
         list($controller, $actionId) = $handler;
         $httpRouter = App::getBean('httpRouter');
@@ -157,10 +160,11 @@ class HandlerAdapter implements HandlerAdapterInterface
      * binding params of action method
      *
      * @param ServerRequestInterface $request request object
-     * @param mixed                  $handler handler
-     * @param array                  $matches route params info
+     * @param mixed $handler handler
+     * @param array $matches route params info
      *
      * @return array
+     * @throws \ReflectionException
      */
     private function bindParams(ServerRequestInterface $request, $handler, array $matches)
     {
@@ -257,7 +261,7 @@ class HandlerAdapter implements HandlerAdapterInterface
                 $value = 0;
                 break;
             case 'string':
-                $value = "";
+                $value = '';
                 break;
             case 'bool':
                 $value = false;

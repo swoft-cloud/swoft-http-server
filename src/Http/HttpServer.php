@@ -72,21 +72,6 @@ class HttpServer extends AbstractServer
         $this->registerSwooleEvents($this->listen, $swooleRpcPortEvents);
     }
 
-    public function onStart(\Swoole\Server $server)
-    {
-        parent::onStart($server);
-
-        \output()->writeln(
-            'Server has been started. ' .
-            "(master PID: <info>{$server->master_pid}</info>, manager PID: <info>{$server->manager_pid}</info>)"
-        );
-
-        // output a message before start
-        if (!$this->isDaemonize()) {
-            \output()->writeln("Press <info>Ctrl-C</info> to quit.\n");
-        }
-    }
-
     /**
      * onRequest event callback
      * Each request will create an coroutine

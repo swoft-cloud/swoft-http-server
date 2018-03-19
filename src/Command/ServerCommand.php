@@ -60,10 +60,10 @@ class ServerCommand
 
         // 信息面板
         $lines = [
-            '                         Information Panel                     ',
+            '                         Server Information                      ',
             '********************************************************************',
-            "* HTTP | host: <note>$httpHost</note>, port: <note>$httpPort</note>, mode: <note>$httpMode</note>, type: <note>$httpType</note>, Worker: <note>$workerNum</note>",
-            "* TCP  | host: <note>$tcpHost</note>, port: <note>$tcpPort</note>, type: <note>$tcpType</note>, Worker: <note>$workerNum</note> ($tcpEnable)",
+            "* HTTP | host: <note>$httpHost</note>, port: <note>$httpPort</note>, type: <note>$httpType</note>, worker: <note>$workerNum</note>, mode: <note>$httpMode</note>",
+            "* TCP  | host: <note>$tcpHost</note>, port: <note>$tcpPort</note>, type: <note>$tcpType</note>, worker: <note>$workerNum</note> ($tcpEnable)",
             '********************************************************************',
         ];
 
