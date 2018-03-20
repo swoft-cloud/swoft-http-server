@@ -16,10 +16,12 @@ class ServerCommand
     /**
      * Start http server
      *
-     * @Usage server:{command} [arguments] [options]
+     * @Usage {fullCommand} [-d|--daemon]
      * @Options
-     * -d,--d start by daemonized process
-     * @Example php swoft.php server:start -d -r
+     *   -d, --daemon    Run server on the background
+     * @Example
+     *   {fullCommand}
+     *   {fullCommand} -d
      * @throws \Swoft\Exception\RuntimeException
      * @throws \RuntimeException
      */
@@ -32,7 +34,7 @@ class ServerCommand
 
         // 是否正在运行
         if ($httpServer->isRunning()) {
-            output()->writeln("<error>The server have been running!(PID: {$serverStatus['masterPid']})</error>", true, true);
+            \output()->writeln("<error>The server have been running!(PID: {$serverStatus['masterPid']})</error>", true, true);
         }
 
         // 启动参数
@@ -54,29 +56,30 @@ class ServerCommand
         $tcpHost = $tcpStatus['host'];
         $tcpPort = $tcpStatus['port'];
         $tcpType = $tcpStatus['type'];
-        $tcpEnable = $tcpEnable ? 1 : 0;
+        $tcpEnable = $tcpEnable ? '<note>Enabled</note>' : '<warning>Disabled</warning>';
 
         // 信息面板
         $lines = [
-            '                         Information Panel                     ',
-            '******************************************************************',
-            "* http | Host: <note>$httpHost</note>, port: <note>$httpPort</note>, Model: <note>$httpMode</note>, type: <note>$httpType</note>, Worker: <note>$workerNum</note>",
-            "* tcp  | Enable: <note>$tcpEnable</note>, host: <note>$tcpHost</note>, port: <note>$tcpPort</note>, type: <note>$tcpType</note>, Worker: <note>$workerNum</note>",
-            '******************************************************************',
+            '                         Server Information                      ',
+            '********************************************************************',
+            "* HTTP | host: <note>$httpHost</note>, port: <note>$httpPort</note>, type: <note>$httpType</note>, worker: <note>$workerNum</note>, mode: <note>$httpMode</note>",
+            "* TCP  | host: <note>$tcpHost</note>, port: <note>$tcpPort</note>, type: <note>$tcpType</note>, worker: <note>$workerNum</note> ($tcpEnable)",
+            '********************************************************************',
         ];
 
         // 启动服务器
-        output()->writeln(implode("\n", $lines));
+        \output()->writeln(implode("\n", $lines));
         $httpServer->start();
     }
 
     /**
-     * Reload worker process
+     * Reload worker processes
      *
-     * @Usage server:{command} [arguments] [options]
+     * @Usage {fullCommand} [-t]
      * @Options
-     * -t only to reload task processes, default to reload worker and task
-     * @Example php swoft.php server:reload
+     *  -t      Only to reload task processes, default to reload worker and task
+     * @Example {fullCommand}
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
     public function reload()
@@ -97,10 +100,10 @@ class ServerCommand
     }
 
     /**
-     * Stop http server
+     * Stop the http server
      *
-     * @Usage server:{command} [arguments] [options]
-     * @Example php swoft.php server:stop
+     * @Usage {fullCommand}
+     * @Example {fullCommand}
      * @throws \RuntimeException
      */
     public function stop()
@@ -109,7 +112,7 @@ class ServerCommand
 
         // 是否已启动
         if (!$httpServer->isRunning()) {
-            output()->writeln('<error>The server is not running! cannot stop</error>', true, true);
+            \output()->writeln('<error>The server is not running! cannot stop</error>', true, true);
         }
 
         // pid文件
@@ -117,23 +120,28 @@ class ServerCommand
         $pidFile = $serverStatus['pfile'];
 
         @unlink($pidFile);
-        output()->writeln(sprintf('<info>Swoft %s is stopping ...</info>', input()->getScript()));
+        \output()->writeln(sprintf('<info>Swoft %s is stopping ...</info>', input()->getScript()));
 
         $result = $httpServer->stop();
 
         // 停止失败
         if (!$result) {
-            output()->writeln(sprintf('<error>Swoft %s stop fail</error>', input()->getScript()), true, true);
+            \output()->writeln(sprintf('<error>Swoft %s stop fail</error>', input()->getScript()), true, true);
         }
 
         output()->writeln(sprintf('<success>Swoft %s stop success!</success>', input()->getScript()));
     }
 
     /**
-     * Restart http server
+     * Restart the http server
      *
-     * @Usage server:{command} [arguments] [options]
-     * @Example php swoft.php server:restart
+     * @Usage {fullCommand} [-d|--daemon]
+     * @Options
+     *   -d, --daemon    Run server on the background
+     * @Example
+     *   {fullCommand}
+     *   {fullCommand} -d
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
     public function restart()
@@ -152,6 +160,7 @@ class ServerCommand
 
     /**
      * @return HttpServer
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
     private function getHttpServer(): HttpServer
@@ -175,7 +184,7 @@ class ServerCommand
      */
     private function setStartArgs(HttpServer $httpServer)
     {
-        $daemonize = input()->hasOpt('d');
+        $daemonize = \input()->getSameOpt(['d', 'daemon'], false);
 
         if ($daemonize) {
             $httpServer->setDaemonize();

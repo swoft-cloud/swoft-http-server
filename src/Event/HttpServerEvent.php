@@ -16,10 +16,10 @@ class HttpServerEvent
     /**
      * before request
      */
-    const BEFORE_REQUEST = "beforeRequest";
+    const BEFORE_REQUEST = 'beforeRequest';
 
     /**
      * after request
      */
-    const AFTER_REQUEST = "afterRequest";
+    const AFTER_REQUEST = 'afterRequest';
 }

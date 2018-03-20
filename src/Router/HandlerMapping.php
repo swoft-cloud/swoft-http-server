@@ -25,21 +25,45 @@ use Swoft\Http\Message\Router\HandlerMappingInterface;
  */
 class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
 {
-    /**
-     * @var string
-     */
-    public $defaultRouter = '/index/index';
-
-    /**
-     * default action
-     *
-     * @var string
-     */
-    public $defaultAction = 'index';
+    /** @var int */
+    private $cacheCounter = 0;
 
     /** @var int */
-    private $routeCounter = 0;
-    private $cacheCounter = 0;
+    protected $routeCounter = 0;
+
+    /**
+     * The param route cache number.
+     * @var int
+     */
+    public $tmpCacheNumber = 200;
+
+    /**
+     * There are last route caches. like static routes
+     * @var array[]
+     * [
+     *     '/user/login' => [
+     *          // METHOD => INFO [...]
+     *          'GET' => [
+     *              'handler' => 'handler0',
+     *              'option' => [...],
+     *          ],
+     *          'PUT' => [
+     *              'handler' => 'handler1',
+     *              'option' => [...],
+     *          ],
+     *          ...
+     *      ],
+     *      ... ...
+     * ]
+     */
+    protected $cacheRoutes = [];
+
+    /** @var array global Options */
+    private $globalOptions = [
+        // 'domains' => [ 'localhost' ], // allowed domains
+        // 'schemas' => [ 'http' ], // allowed schemas
+        // 'time' => ['12'],
+    ];
 
     /*******************************************************************************
      * route collection
@@ -63,17 +87,47 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      * @throws \LogicException
      * @throws \InvalidArgumentException
      */
-    public function map($methods, $route, $handler, array $opts = [])
+    public function map($methods, string $route, $handler, array $opts = []): AbstractRouter
+    {
+        $methods = $this->validateArguments($methods, $handler);
+        list($route, $conf) = $this->prepareForMap($route, $handler, $opts);
+
+        // it is static route
+        if (self::isStaticRoute($route)) {
+            foreach ($methods as $method) {
+                if ($method === 'ANY') {
+                    continue;
+                }
+
+                $this->routeCounter++;
+                $this->staticRoutes[$route][$method] = $conf;
+            }
+
+            return $this;
+        }
+
+        // collect param route
+        $this->collectParamRoute($route, $methods, $conf);
+
+        return $this;
+    }
+
+    /**
+     * @param string $route
+     * @param $handler
+     * @param array $opts
+     * @return array
+     */
+    protected function prepareForMap(string $route, $handler, array $opts): array
     {
         if (!$this->initialized) {
             $this->initialized = true;
         }
 
         $hasPrefix = (bool)$this->currentGroupPrefix;
-        $methods = static::validateArguments($methods, $handler);
 
         // always add '/' prefix.
-        if ($route = trim($route)) {
+        if ($route = \trim($route)) {
             $route = $route{0} === '/' ? $route : '/' . $route;
         } elseif (!$hasPrefix) {
             $route = '/';
@@ -83,41 +137,53 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
 
         // setting 'ignoreLastSlash'
         if ($route !== '/' && $this->ignoreLastSlash) {
-            $route = rtrim($route, '/');
+            $route = \rtrim($route, '/');
         }
 
-        $opts = array_merge($this->currentGroupOption, $opts);
         $conf = [
             'handler' => $handler,
-            'option' => $opts,
         ];
 
-        // it is static route
-        if (self::isStaticRoute($route)) {
-            foreach (explode(',', $methods) as $method) {
-                $this->routeCounter++;
-                $this->staticRoutes[$route][$method] = $conf;
-            }
-
-            return $this;
+        if ($this->currentGroupOption) {
+            $opts = \array_merge($this->currentGroupOption, $opts);
         }
 
+        if ($opts) {
+            $conf['option'] = $opts;
+        }
+
+        return [$route, $conf];
+    }
+
+    /**
+     * @param string $route
+     * @param array $methods
+     * @param array $conf
+     * @throws \LogicException
+     */
+    protected function collectParamRoute(string $route, array $methods, array $conf)
+    {
+        $conf['original'] = $route;
         $params = $this->getAvailableParams($opts['params'] ?? []);
         list($first, $conf) = $this->parseParamRoute($route, $params, $conf);
 
         // route string have regular
         if ($first) {
+            $conf['methods'] = \implode(',', $methods) . ',';
             $this->routeCounter++;
-            $conf['methods'] = $methods;
             $this->regularRoutes[$first][] = $conf;
-        } else {
-            foreach (explode(',', $methods) as $method) {
-                $this->routeCounter++;
-                $this->vagueRoutes[$method][] = $conf;
-            }
+
+            return;
         }
 
-        return $this;
+        foreach ($methods as $method) {
+            if ($method === 'ANY') {
+                continue;
+            }
+
+            $this->routeCounter++;
+            $this->vagueRoutes[$method][] = $conf;
+        }
     }
 
     /*******************************************************************************
@@ -130,7 +196,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      * @param string $path
      * @return array
      */
-    public function match($path, $method = 'GET')
+    public function match(string $path, string $method = 'GET'): array
     {
         // if enable 'matchAll'
         if ($matchAll = $this->matchAll) {
@@ -139,7 +205,6 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
             } elseif (\is_callable($matchAll)) {
                 return [self::FOUND, $path, [
                     'handler' => $matchAll,
-                    'option' => [],
                 ]];
             }
         }
@@ -148,22 +213,25 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
         $method = strtoupper($method);
 
         // find in route caches.
-        if ($this->routeCaches && isset($this->routeCaches[$path][$method])) {
-            return [self::FOUND, $path, $this->routeCaches[$path][$method]];
+        if ($this->cacheRoutes && isset($this->cacheRoutes[$path][$method])) {
+            return [self::FOUND, $path, $this->cacheRoutes[$path][$method]];
         }
 
         // is a static route path
-        if ($this->staticRoutes && isset($this->staticRoutes[$path][$method])) {
-            $conf = $this->staticRoutes[$path][$method];
-
-            return [self::FOUND, $path, $conf];
+        if ($this->staticRoutes && ($routeInfo = $this->findInStaticRoutes($path, $method))) {
+            return [self::FOUND, $path, $routeInfo];
         }
 
-        $first = $this->getFirstFromPath($path);
+        $first = null;
         $allowedMethods = [];
 
+        // eg '/article/12'
+        if ($pos = strpos($path, '/', 1)) {
+            $first = substr($path, 1, $pos - 1);
+        }
+
         // is a regular dynamic route(the first node is 1th level index key).
-        if (isset($this->regularRoutes[$first])) {
+        if ($first && isset($this->regularRoutes[$first])) {
             $result = $this->findInRegularRoutes($this->regularRoutes[$first], $path, $method);
 
             if ($result[0] === self::FOUND) {
@@ -182,25 +250,17 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
             }
         }
 
-        // handle Auto Route
-        if ($this->autoRoute && ($handler = $this->matchAutoRoute($path))) {
-            return [self::FOUND, $path, [
-                'handler' => $handler,
-                'option' => [],
-            ]];
-        }
-
         // For HEAD requests, attempt fallback to GET
-        if ($method === self::HEAD) {
-            if (isset($this->routeCaches[$path]['GET'])) {
-                return [self::FOUND, $path, $this->routeCaches[$path]['GET']];
+        if ($method === 'HEAD') {
+            if (isset($this->cacheRoutes[$path]['GET'])) {
+                return [self::FOUND, $path, $this->cacheRoutes[$path]['GET']];
             }
 
-            if (isset($this->staticRoutes[$path]['GET'])) {
-                return [self::FOUND, $path, $this->staticRoutes[$path]['GET']];
+            if ($routeInfo = $this->findInStaticRoutes($path, 'GET')) {
+                return [self::FOUND, $path, $routeInfo];
             }
 
-            if (isset($this->regularRoutes[$first])) {
+            if ($first && isset($this->regularRoutes[$first])) {
                 $result = $this->findInRegularRoutes($this->regularRoutes[$first], $path, 'GET');
 
                 if ($result[0] === self::FOUND) {
@@ -218,17 +278,32 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
         }
 
         // If nothing else matches, try fallback routes. $router->any('*', 'handler');
-        if ($this->staticRoutes && isset($this->staticRoutes['/*'][$method])) {
-            return [self::FOUND, $path, $this->staticRoutes['/*'][$method]];
+        if ($this->staticRoutes && ($routeInfo = $this->findInStaticRoutes('/*', $method))) {
+            return [self::FOUND, $path, $routeInfo];
         }
 
         if ($this->notAllowedAsNotFound) {
             return [self::NOT_FOUND, $path, null];
         }
 
-        // collect allowed methods from: staticRoutes, vagueRoutes
+        // collect allowed methods from: staticRoutes, vagueRoutes OR return not found.
+        return $this->findAllowedMethods($path, $method, $allowedMethods);
+    }
+
+    /*******************************************************************************
+     * helper methods
+     ******************************************************************************/
+
+    /**
+     * @param string $path
+     * @param string $method
+     * @param array $allowedMethods
+     * @return array
+     */
+    protected function findAllowedMethods(string $path, string $method, array $allowedMethods): array
+    {
         if (isset($this->staticRoutes[$path])) {
-            $allowedMethods = array_merge($allowedMethods, array_keys($this->staticRoutes[$path]));
+            $allowedMethods = \array_merge($allowedMethods, \array_keys($this->staticRoutes[$path]));
         }
 
         foreach ($this->vagueRoutes as $m => $routes) {
@@ -243,7 +318,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
             }
         }
 
-        if ($allowedMethods && ($list = array_unique($allowedMethods))) {
+        if ($allowedMethods && ($list = \array_unique($allowedMethods))) {
             return [self::METHOD_NOT_ALLOWED, $path, $list];
         }
 
@@ -251,35 +326,18 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
         return [self::NOT_FOUND, $path, null];
     }
 
-    /*******************************************************************************
-     * helper methods
-     ******************************************************************************/
-
     /**
-     * @param array $routesData
      * @param string $path
      * @param string $method
-     * @return array
+     * @return array|false
      */
-    protected function findInRegularRoutes(array $routesData, $path, $method)
+    protected function findInStaticRoutes($path, $method)
     {
-        $allowedMethods = '';
-
-        foreach ($routesData as $conf) {
-            if (0 === strpos($path, $conf['start']) && preg_match($conf['regex'], $path, $matches)) {
-                $allowedMethods .= $conf['methods'] . ',';
-
-                if (false !== strpos($conf['methods'] . ',', $method . ',')) {
-                    $conf['matches'] = $this->filterMatches($matches, $conf);
-
-                    $this->cacheMatchedParamRoute($path, $method, $conf);
-
-                    return [self::FOUND, $path, $conf];
-                }
-            }
+        if (isset($this->staticRoutes[$path][$method])) {
+            return $this->staticRoutes[$path][$method];
         }
 
-        return [self::NOT_FOUND, explode(',', trim($allowedMethods, ','))];
+        return false;
     }
 
     /**
@@ -288,17 +346,48 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      * @param string $method
      * @return array
      */
-    protected function findInVagueRoutes(array $routesData, $path, $method)
+    protected function findInRegularRoutes(array $routesData, string $path, string $method): array
+    {
+        $allowedMethods = '';
+
+        foreach ($routesData as $conf) {
+            if (0 === \strpos($path, $conf['start']) && \preg_match($conf['regex'], $path, $matches)) {
+                $allowedMethods .= $conf['methods'];
+
+                if (false !== \strpos($conf['methods'], $method . ',')) {
+                    $this->filterMatches($matches, $conf);
+
+                    if ($this->tmpCacheNumber > 0) {
+                        $this->cacheMatchedParamRoute($path, $method, $conf);
+                    }
+
+                    return [self::FOUND, $path, $conf];
+                }
+            }
+        }
+
+        return [self::NOT_FOUND, \explode(',', \trim($allowedMethods, ','))];
+    }
+
+    /**
+     * @param array $routesData
+     * @param string $path
+     * @param string $method
+     * @return array
+     */
+    protected function findInVagueRoutes(array $routesData, string $path, string $method): array
     {
         foreach ($routesData as $conf) {
-            if ($conf['include'] && false === strpos($path, $conf['include'])) {
+            if ($conf['include'] && false === \strpos($path, $conf['include'])) {
                 continue;
             }
 
-            if (preg_match($conf['regex'], $path, $matches)) {
-                $conf['matches'] = $this->filterMatches($matches, $conf);
+            if (\preg_match($conf['regex'], $path, $matches)) {
+                $this->filterMatches($matches, $conf);
 
-                $this->cacheMatchedParamRoute($path, $method, $conf);
+                if ($this->tmpCacheNumber > 0) {
+                    $this->cacheMatchedParamRoute($path, $method, $conf);
+                }
 
                 return [self::FOUND, $path, $conf];
             }
@@ -312,27 +401,62 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      * @param string $method
      * @param array $conf
      */
-    protected function cacheMatchedParamRoute($path, $method, array $conf)
+    protected function cacheMatchedParamRoute(string $path, string $method, array $conf)
     {
         $cacheNumber = (int)$this->tmpCacheNumber;
 
         // cache last $cacheNumber routes.
-        if ($cacheNumber > 0 && !isset($this->routeCaches[$path][$method])) {
+        if ($cacheNumber > 0 && !isset($this->cacheRoutes[$path][$method])) {
             if ($this->cacheCounter >= $cacheNumber) {
-                array_shift($this->routeCaches);
+                \array_shift($this->cacheRoutes);
             }
 
             $this->cacheCounter++;
-            $this->routeCaches[$path][$method] = $conf;
+            $this->cacheRoutes[$path][$method] = $conf;
         }
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getCacheRoutes(): array
+    {
+        return $this->cacheRoutes;
     }
 
     /**
      * @return int
      */
-    public function count()
+    public function getCacheCounter(): int
+    {
+        return $this->cacheCounter;
+    }
+
+    /**
+     * @return int
+     */
+    public function count(): int
     {
         return $this->routeCounter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGlobalOptions(): array
+    {
+        return $this->globalOptions;
+    }
+
+    /**
+     * @param array $globalOptions
+     * @return $this
+     */
+    public function setGlobalOptions(array $globalOptions): self
+    {
+        $this->globalOptions = $globalOptions;
+
+        return $this;
     }
 
     /*******************************************************************************
@@ -358,6 +482,8 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      * 自动注册路由
      *
      * @param array $requestMapping
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
      */
     public function registerRoutes(array $requestMapping)
     {
@@ -398,8 +524,8 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
             // 解析注入action名称
             $mapRoute = empty($mapRoute) ? $action : $mapRoute;
 
-            // '/'开头的路由是一个单独的路由，未使用'/'需要和控制器组拼成一个路由
-            $uri     = strpos($mapRoute, '/') === 0 ? $mapRoute : $controllerPrefix . '/' . $mapRoute;
+            // '/'开头的路由是一个单独的路由 未使用'/'需要和控制器组拼成一个路由
+            $uri     = $mapRoute[0] === '/' ? $mapRoute : $controllerPrefix . '/' . $mapRoute;
             $handler = $className . '@' . $action;
 
             // 注入路由规则
@@ -417,7 +543,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      *
      * @return string
      */
-    private function getControllerPrefix(string $controllerPrefix, string $className)
+    private function getControllerPrefix(string $controllerPrefix, string $className): string
     {
         // 注解注入不为空，直接返回prefix
         if (!empty($controllerPrefix)) {
@@ -428,8 +554,8 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
         $reg    = '/^.*\\\(\w+)' . $this->controllerSuffix . '$/';
         $prefix = '';
 
-        if ($result = preg_match($reg, $className, $match)) {
-            $prefix = '/' . lcfirst($match[1]);
+        if ($result = \preg_match($reg, $className, $match)) {
+            $prefix = '/' . \lcfirst($match[1]);
         }
 
         return $prefix;

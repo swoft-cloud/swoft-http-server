@@ -2,6 +2,8 @@
 
 namespace SwoftTest\HttpServer;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  *
  *
@@ -11,7 +13,7 @@ namespace SwoftTest\HttpServer;
  * @copyright Copyright 2010-2016 swoft software
  * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
-class DemoTest extends AbstractTestCase
+class DemoTest extends TestCase
 {
     public function testDemo()
     {

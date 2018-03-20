@@ -56,10 +56,11 @@ class HttpServer extends AbstractServer
      *
      * @throws \Swoft\Exception\RuntimeException
      */
-    private function registerRpcEvent()
+    protected function registerRpcEvent()
     {
         $swooleListeners = SwooleListenerCollector::getCollector();
-        if (! isset($swooleListeners[SwooleEvent::TYPE_PORT][0]) || empty($swooleListeners[SwooleEvent::TYPE_PORT][0])) {
+
+        if (!isset($swooleListeners[SwooleEvent::TYPE_PORT][0]) || empty($swooleListeners[SwooleEvent::TYPE_PORT][0])) {
             throw new RuntimeException("Please use swoft/rpc-server, run 'composer require swoft/rpc-server'");
         }
 
@@ -81,11 +82,11 @@ class HttpServer extends AbstractServer
     public function onRequest(Request $request, Response $response)
     {
         // Initialize Request and Response and set to RequestContent
-        $request = \Swoft\Http\Message\Server\Request::loadFromSwooleRequest($request);
-        $response = new \Swoft\Http\Message\Server\Response($response);
+        $psr7Request = \Swoft\Http\Message\Server\Request::loadFromSwooleRequest($request);
+        $psr7Response = new \Swoft\Http\Message\Server\Response($response);
 
         /** @var \Swoft\Http\Server\ServerDispatcher $dispatcher */
         $dispatcher = App::getBean('serverDispatcher');
-        $dispatcher->dispatch($request, $response);
+        $dispatcher->dispatch($psr7Request, $psr7Response);
     }
 }

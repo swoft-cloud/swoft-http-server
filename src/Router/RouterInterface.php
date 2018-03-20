@@ -5,12 +5,7 @@ namespace Swoft\Http\Server\Router;
 /**
  * Interface RouterInterface
  * @package Swoft\Router\Http
- *
- * @uses      HandlerMapping
- * @version   2017年07月14日
- * @author    inhere <in.798@qq.com>
- * @copyright Copyright 2010-2016 Swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
+ * @author  inhere <in.798@qq.com>
  */
 interface RouterInterface
 {
@@ -43,12 +38,16 @@ interface RouterInterface
     const CONNECT = 'CONNECT';
     const TRACE = 'TRACE';
 
-    /** @var array supported methods */
-    const SUPPORTED_METHODS = [
+    /** supported methods list */
+    const ALLOWED_METHODS = [
         'ANY',
         'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD',
         // 'COPY', 'PURGE', 'LINK', 'UNLINK', 'LOCK', 'UNLOCK', 'VIEW', 'SEARCH', 'CONNECT', 'TRACE',
     ];
+
+    // ,COPY,PURGE,LINK,UNLINK,LOCK,UNLOCK,VIEW,SEARCH,CONNECT,TRACE';
+    /** supported methods string */
+    const ALLOWED_METHODS_STR = 'ANY,GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD';
 
     /** the matched result index key */
     const INDEX_STATUS = 0;
@@ -69,11 +68,9 @@ interface RouterInterface
      *     'domains'  => [ 'a-domain.com', '*.b-domain.com'],
      *     'schemas' => ['https'],
      * ]
-     * @return static
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
+     * @return AbstractRouter
      */
-    public function map($methods, $route, $handler, array $opts = []);
+    public function map($methods, string $route, $handler, array $opts = []): AbstractRouter;
 
     /**
      * find the matched route info for the given request uri path
@@ -82,14 +79,14 @@ interface RouterInterface
      * @return array
      *
      *  [self::NOT_FOUND, $path, null]
-     *  [self::METHOD_NOT_ALLOWED, $path, ['GET', 'OTHER_ALLOWED_METHODS']]
+     *  [self::METHOD_NOT_ALLOWED, $path, ['GET', 'POST']]
      *  [self::FOUND, $path, array () // routeData ]
      *
      */
-    public function match($path, $method = 'GET');
+    public function match(string $path, string $method = 'GET'): array;
 
     /**
      * @return array
      */
-    public static function getSupportedMethods();
+    public static function getSupportedMethods(): array;
 }
