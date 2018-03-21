@@ -58,6 +58,7 @@ class HttpValidator extends AbstractValidator
             if ($type === ValidatorFrom::GET) {
                 if (! isset($get[$name])) {
                     $request = $request->addQueryParam($name, $default);
+                    $this->doValidation($name, $default, $info);
                     continue;
                 }
                 $this->doValidation($name, $get[$name], $info);
@@ -67,6 +68,7 @@ class HttpValidator extends AbstractValidator
             if ($type === ValidatorFrom::POST && \is_array($post)) {
                 if (! isset($post[$name])) {
                     $request = $request->addParserBody($name, $default);
+                    $this->doValidation($name, $default, $info);
                     continue;
                 }
                 $this->doValidation($name, $post[$name], $info);

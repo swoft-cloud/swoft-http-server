@@ -31,6 +31,7 @@ class HttpServer extends AbstractServer
     	if (!empty($this->setting['open_http2_protocol'])) {
     		$this->httpSetting['type'] = SWOOLE_SOCK_TCP|SWOOLE_SSL;
 		}
+
         $this->server = new Server($this->httpSetting['host'], $this->httpSetting['port'], $this->httpSetting['mode'], $this->httpSetting['type']);
 
         // Bind event callback
