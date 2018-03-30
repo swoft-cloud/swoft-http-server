@@ -23,8 +23,9 @@ trait AcceptTrait
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface      $response
+     * @param \Psr\Http\Message\ResponseInterface $response
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \InvalidArgumentException
      */
     protected function handleAccept(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {

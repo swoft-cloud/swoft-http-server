@@ -21,10 +21,14 @@ class HandlerAdapterMiddleware implements MiddlewareInterface
     /**
      * execute action
      *
-     * @param \Psr\Http\Message\ServerRequestInterface     $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Server\RequestHandlerInterface $handler
      *
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Swoft\Http\Server\Exception\RouteNotFoundException
+     * @throws \Swoft\Http\Server\Exception\MethodNotAllowedException
+     * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
