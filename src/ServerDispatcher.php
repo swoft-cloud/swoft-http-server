@@ -77,8 +77,9 @@ class ServerDispatcher implements DispatcherInterface
      */
     public function addMiddleware($middleware, string $name = null)
     {
+        // set key, can allow override it
         if ($name) {
-            $this->middlewares[] = $middleware;
+            $this->middlewares[$name] = $middleware;
         } else {
             $this->middlewares[] = $middleware;
         }
