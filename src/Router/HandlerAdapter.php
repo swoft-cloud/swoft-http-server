@@ -32,6 +32,7 @@ class HandlerAdapter implements HandlerAdapterInterface
      * @param ServerRequestInterface $request request object
      * @param array $routeInfo handler info
      * @return Response
+     * @throws \Swoft\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
      * @throws \Swoft\Http\Server\Exception\MethodNotAllowedException
      * @throws \Swoft\Http\Server\Exception\RouteNotFoundException
@@ -166,7 +167,7 @@ class HandlerAdapter implements HandlerAdapterInterface
      * @return array
      * @throws \ReflectionException
      */
-    private function bindParams(ServerRequestInterface $request, $handler, array $matches)
+    private function bindParams(ServerRequestInterface $request, $handler, array $matches): array
     {
         if (\is_array($handler)) {
             list($controller, $method) = $handler;
@@ -247,7 +248,7 @@ class HandlerAdapter implements HandlerAdapterInterface
     }
 
     /**
-     * the deafult value of param
+     * the default value of param
      *
      * @param string $type the type of param
      *

@@ -8,7 +8,7 @@ use Swoft\Bean\Annotation\Scope;
 use Swoft\Http\Server\Bean\Collector\ControllerCollector;
 
 /**
- * AutoController注解解析器
+ * AutoController 注解解析器
  *
  * @uses      ControllerParser
  * @version   2017年09月03日

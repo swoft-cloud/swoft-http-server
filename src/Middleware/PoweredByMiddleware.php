@@ -9,7 +9,7 @@ use Swoft\Bean\Annotation\Bean;
 use Swoft\Http\Message\Middleware\MiddlewareInterface;
 
 /**
- * add powere by
+ * add powered by
  *
  * @Bean()
  * @uses      PoweredByMiddleware
@@ -20,7 +20,6 @@ use Swoft\Http\Message\Middleware\MiddlewareInterface;
  */
 class PoweredByMiddleware implements MiddlewareInterface
 {
-
     /**
      * Process an incoming server request and return a response, optionally delegating
      * response creation to a handler.

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inhere
- * Date: 2018/3/19
- * Time: 上午11:32
- */
 
 namespace Swoft\Http\Server\Bootstrap\Listener;
 
@@ -30,7 +24,7 @@ class MasterStartListener implements StartInterface
 
         // output a message before start
         if (!App::$server->isDaemonize()) {
-            \output()->writeln('You can use <info>CTRL + C</info> to stop run.');
+            \output()->writeln("You can use <info>CTRL + C</info> to stop run.\n");
         }
     }
 }

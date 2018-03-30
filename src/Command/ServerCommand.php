@@ -22,6 +22,7 @@ class ServerCommand
      * @Example
      *   {fullCommand}
      *   {fullCommand} -d
+     * @throws \InvalidArgumentException
      * @throws \Swoft\Exception\RuntimeException
      * @throws \RuntimeException
      */
@@ -56,7 +57,7 @@ class ServerCommand
         $tcpHost = $tcpStatus['host'];
         $tcpPort = $tcpStatus['port'];
         $tcpType = $tcpStatus['type'];
-        $tcpEnable = $tcpEnable ? '<note>Enabled</note>' : '<warning>Disabled</warning>';
+        $tcpEnable = $tcpEnable ? '<info>Enabled</info>' : '<warning>Disabled</warning>';
 
         // 信息面板
         $lines = [
@@ -104,6 +105,7 @@ class ServerCommand
      *
      * @Usage {fullCommand}
      * @Example {fullCommand}
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
     public function stop()
@@ -141,6 +143,7 @@ class ServerCommand
      * @Example
      *   {fullCommand}
      *   {fullCommand} -d
+     * @throws \Swoft\Exception\RuntimeException
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
