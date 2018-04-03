@@ -15,13 +15,13 @@ use Swoft\Http\Message\Middleware\MiddlewareInterface;
  */
 class AcceptMiddleware implements MiddlewareInterface
 {
-
     use AcceptTrait;
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Server\RequestHandlerInterface $handler
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \InvalidArgumentException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

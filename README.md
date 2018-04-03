@@ -2,7 +2,7 @@
 
 Swoft Http server Component
 
-# Install
+## Install
 
 - composer command
 
@@ -10,16 +10,16 @@ Swoft Http server Component
 composer require swoft/http-server
 ```
 
-# Document
+## Document
 
 Please see [document site](https://doc.swoft.org)
 
-# Unit testing
+## Unit testing
 
 ```bash
 phpunit
 ```
 
-# LICENSE
+## LICENSE
 
 The Component is open-sourced software licensed under the [Apache license](LICENSE).

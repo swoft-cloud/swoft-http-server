@@ -14,16 +14,13 @@ use Swoft\Http\Message\Server\Response;
 use Swoft\Http\Server\AttributeEnum;
 use Swoft\Http\Server\Exception\MethodNotAllowedException;
 use Swoft\Http\Server\Exception\RouteNotFoundException;
+use Swoft\Http\Server\Payload;
 
 /**
  * http handler adapter
  *
  * @Bean("httpHandlerAdapter")
- * @uses      HandlerAdapterMiddleware
- * @version   2017年11月23日
  * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
  */
 class HandlerAdapter implements HandlerAdapterInterface
 {
@@ -58,7 +55,7 @@ class HandlerAdapter implements HandlerAdapterInterface
                 "Method '%s' not allowed for access %s, Allow: %s",
                 $request->getMethod(),
                 $path,
-                implode(',', $routeInfo[2])
+                \implode(',', $routeInfo[2])
             ));
         }
 
@@ -75,9 +72,17 @@ class HandlerAdapter implements HandlerAdapterInterface
 
         // response
         if (!$response instanceof Response) {
-            /* @var Response $contextResponse*/
-            $contextResponse = RequestContext::getResponse();
-            $response = $contextResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE , $response);
+            /* @var Response $newResponse*/
+            $newResponse = RequestContext::getResponse();
+
+            // if is Payload
+            if ($response instanceof Payload) {
+                $response = $newResponse
+                    ->withStatus($response->getStatus())
+                    ->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE , $response->data);
+            } else {
+                $response = $newResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE , $response);
+            }
         }
 
         return $response;
