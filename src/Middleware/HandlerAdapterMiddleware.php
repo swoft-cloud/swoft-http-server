@@ -25,6 +25,7 @@ class HandlerAdapterMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Server\RequestHandlerInterface $handler
      *
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Swoft\Exception\InvalidArgumentException
      * @throws \Swoft\Http\Server\Exception\RouteNotFoundException
      * @throws \Swoft\Http\Server\Exception\MethodNotAllowedException
      * @throws \InvalidArgumentException
@@ -36,8 +37,7 @@ class HandlerAdapterMiddleware implements MiddlewareInterface
 
         /* @var HandlerAdapter $handlerAdapter */
         $handlerAdapter = App::getBean('httpHandlerAdapter');
-        $response       = $handlerAdapter->doHandler($request, $httpHandler);
 
-        return $response;
+        return $handlerAdapter->doHandler($request, $httpHandler);
     }
 }

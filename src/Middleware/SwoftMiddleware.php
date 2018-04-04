@@ -10,16 +10,12 @@ use Swoft\Bean\Annotation\Bean;
 use Swoft\Http\Server\Exception\NotAcceptableException;
 use Swoft\Http\Message\Middleware\MiddlewareInterface;
 
-
 /**
  * @Bean()
  * Merge all swoft middleware to this one middleware for performance
- *
- * @Bean()
  */
 class SwoftMiddleware implements MiddlewareInterface
 {
-
     use AcceptTrait, RouterTrait;
 
     /**
@@ -34,38 +30,26 @@ class SwoftMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /**
-         * Fix Chrome ico request bug
-         */
+        // Fix Chrome ico request bug
         if ($request->getUri()->getPath() === '/favicon.ico') {
             throw new NotAcceptableException('access favicon.ico');
         }
 
-        /**
-         * Parser
-         */
+        // Parser
         /* @var \Swoft\Http\Server\Parser\RequestParserInterface $requestParser */
         $requestParser = App::getBean('requestParser');
         $request = $requestParser->parse($request);
 
-        /**
-         * Router
-         */
+        // Router
         $request = $this->handleRouter($request);
 
-        /**
-         * Delegate to next handler
-         */
+        // Delegate to next handler
         $response = $handler->handle($request);
 
-        /**
-         * Power by
-         */
+        // Power by
         $response = $response->withAddedHeader('X-Powered-By', 'Swoft');
 
-        /**
-         * Response handler, according to Accept
-         */
+        // Response handler, according to Accept
         $response = $this->handleAccept($request, $response);
 
         return $response;

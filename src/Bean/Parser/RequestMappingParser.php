@@ -26,7 +26,6 @@ class RequestMappingParser extends AbstractParser
      * @param string $propertyName
      * @param string $methodName
      * @param null|mixed $propertyValue
-     * @return mixed
      */
     public function parser(
         string $className,
@@ -36,7 +35,8 @@ class RequestMappingParser extends AbstractParser
         $propertyValue = null
     ) {
         $collector = ControllerCollector::getCollector();
-        if (! isset($collector[$className])) {
+
+        if (!isset($collector[$className])) {
             return;
         }
 
