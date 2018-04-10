@@ -65,6 +65,7 @@ class ServerDispatcher implements DispatcherInterface
             $errorHandler = App::getBean(ErrorHandler::class);
             $response = $errorHandler->handle($throwable);
         }
+
         $this->afterDispatch($response);
 
         return $response;
