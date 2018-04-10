@@ -470,7 +470,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      *
      * @return array
      */
-    public function getHandler(...$params)
+    public function getHandler(...$params): array
     {
         list($path, $method) = $params;
         // list($path, $info) = $router;
@@ -492,7 +492,7 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
                 continue;
             }
 
-            // 控制器prefix
+            // controller prefix
             $controllerPrefix = $mapping['prefix'];
             $controllerPrefix = $this->getControllerPrefix($controllerPrefix, $className);
             $routes           = $mapping['routes'];
@@ -512,7 +512,9 @@ class HandlerMapping extends AbstractRouter implements HandlerMappingInterface
      */
     private function registerRoute(string $className, array $routes, string $controllerPrefix)
     {
-        // 循环注册路由
+        $controllerPrefix = '/' . \trim($controllerPrefix, '/');
+
+        // Circular Registration Route
         foreach ($routes as $route) {
             if (!isset($route['route'], $route['method'], $route['action'])) {
                 continue;

@@ -8,18 +8,12 @@ use Swoft\Bean\Annotation\Scope;
 use Swoft\Http\Server\Bean\Collector\ControllerCollector;
 
 /**
- * AutoController注解解析器
- *
- * @uses      ControllerParser
- * @version   2017年09月03日
- * @author    stelin <phpcrazy@126.com>
- * @copyright Copyright 2010-2016 swoft software
- * @license   PHP Version 7.x {@link http://www.php.net/license/3_0.txt}
+ * Controller parser
  */
 class ControllerParser extends AbstractParser
 {
     /**
-     * AutoController注解解析
+     * Parse @Controller annotation
      *
      * @param string      $className
      * @param Controller  $objectAnnotation

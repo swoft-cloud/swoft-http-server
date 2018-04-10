@@ -41,11 +41,12 @@ class ServerDispatcher implements DispatcherInterface
      *
      * @param array ...$params
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \InvalidArgumentException
      */
     public function dispatch(...$params): ResponseInterface
     {
         /**
-         * @var RequestInterface  $request
+         * @var RequestInterface $request
          * @var ResponseInterface $response
          */
         list($request, $response) = $params;
@@ -72,13 +73,27 @@ class ServerDispatcher implements DispatcherInterface
     }
 
     /**
+     * @param $middleware
+     * @param string|null $name
+     */
+    public function addMiddleware($middleware, string $name = null)
+    {
+        // set key, can allow override it
+        if ($name) {
+            $this->middlewares[$name] = $middleware;
+        } else {
+            $this->middlewares[] = $middleware;
+        }
+    }
+
+    /**
      * The middleware of request
      *
      * @return array
      */
     public function requestMiddleware(): array
     {
-        return array_merge($this->preMiddleware(), $this->middlewares, $this->afterMiddleware());
+        return \array_merge($this->preMiddleware(), $this->middlewares, $this->afterMiddleware());
     }
 
     /**
@@ -109,8 +124,9 @@ class ServerDispatcher implements DispatcherInterface
     /**
      * before dispatcher
      *
-     * @param RequestInterface  $request
+     * @param RequestInterface $request
      * @param ResponseInterface $response
+     * @throws \InvalidArgumentException
      */
     protected function beforeDispatch(RequestInterface $request, ResponseInterface $response)
     {
@@ -128,10 +144,11 @@ class ServerDispatcher implements DispatcherInterface
      * and return a suitable response
      *
      * @param mixed $response
+     * @throws \InvalidArgumentException
      */
     protected function afterDispatch($response)
     {
-        if (! $response instanceof Response) {
+        if (!$response instanceof Response) {
             $response = RequestContext::getResponse()->auto($response);
         }
 
@@ -143,6 +160,14 @@ class ServerDispatcher implements DispatcherInterface
 
         // Trigger 'After Request' event
         App::trigger(HttpServerEvent::AFTER_REQUEST);
+    }
+
+    /**
+     * @return array
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
     }
 
 }

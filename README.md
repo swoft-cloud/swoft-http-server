@@ -1,9 +1,25 @@
-# Swoft Http-server
-Swoft Http-server Component
+# Swoft http server
 
-# Install
+Swoft Http server Component
 
-# Document
+## Install
 
-# LICENSE
-Swoft Http-server Component is open-sourced software licensed under the [Apache license](LICENSE).
+- composer command
+
+```bash
+composer require swoft/http-server
+```
+
+## Document
+
+Please see [document site](https://doc.swoft.org)
+
+## Unit testing
+
+```bash
+phpunit
+```
+
+## LICENSE
+
+The Component is open-sourced software licensed under the [Apache license](LICENSE).

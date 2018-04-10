@@ -20,28 +20,27 @@ trait AcceptTrait
      */
     protected $acceptJson = 'application/json';
 
-
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface      $response
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @return \Psr\Http\Message\ResponseInterface|Response
+     * @throws \InvalidArgumentException
      */
     protected function handleAccept(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         // Only handle HTTP-Server Response
-        if (! $response instanceof Response) {
+        if (!$response instanceof Response) {
             return $response;
         }
 
-        // View
-        $content = $response->getAttribute(AttributeEnum::RESPONSE_ATTRIBUTE);
-        if ($content === null) {
+        // View(has been handled by ViewMiddleware)
+        $data = $response->getAttribute(AttributeEnum::RESPONSE_ATTRIBUTE);
+        if ($data === null) {
             return $response;
         }
 
         $accepts = $request->getHeader('accept');
-        $currentAccept = current($accepts);
-        $data = $response->getAttribute(AttributeEnum::RESPONSE_ATTRIBUTE);
+        $currentAccept = \current($accepts);
 
         if (empty($currentAccept)) {
             if ($response->isArrayable($data)) {
@@ -59,7 +58,7 @@ trait AcceptTrait
             return $response->json($data);
         }
 
-        if (! empty($data)) {
+        if (!empty($data)) {
             return $response->raw((string)$data);
         }
 

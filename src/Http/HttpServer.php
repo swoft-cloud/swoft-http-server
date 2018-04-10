@@ -77,8 +77,9 @@ class HttpServer extends AbstractServer
      * onRequest event callback
      * Each request will create an coroutine
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Response $response
+     * @throws \InvalidArgumentException
      */
     public function onRequest(Request $request, Response $response)
     {
