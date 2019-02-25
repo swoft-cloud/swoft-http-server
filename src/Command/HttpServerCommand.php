@@ -9,13 +9,14 @@ use Swoft\Console\Helper\Show;
 use Swoft\Http\Server\HttpServer;
 
 /**
- * Class HttpServerCommand
- * @Command("http", coroutine=false, desc="provide some commands to operate HTTP Server")
+ * provide some commands to manage the HTTP Server
+ *
+ * @Command("http", alias="httpserver, httpServer, http-server", coroutine=false)
  */
 class HttpServerCommand
 {
     /**
-     * Start http server
+     * Start the http server
      *
      * @CommandMapping(
      *     usage="{fullCommand} [-d|--daemon]",
@@ -29,27 +30,27 @@ class HttpServerCommand
      */
     public function start(): void
     {
-        $server = $this->getHttpServer();
+        $server = $this->createServer();
 
-        // 是否正在运行
+        // Check if it has started
         if ($server->isRunning()) {
             $masterPid = $server->getPid();
             \output()->writeln("<error>The server have been running!(PID: {$masterPid})</error>");
             return;
         }
 
-        // 启动参数
-        $this->setStartArgs($server);
+        // Startup settings
+        $this->configStartOption($server);
 
         $settings = $server->getSetting();
         // Setting
         $workerNum = $settings['worker_num'];
 
-        // HTTP 启动参数
-        $httpHost = $server->getHost();
-        $httpPort = $server->getPort();
-        $httpMode = $server->getModeName();
-        $httpType = $server->getTypeName();
+        // Server startup parameters
+        $mainHost = $server->getHost();
+        $mainPort = $server->getPort();
+        $modeName = $server->getModeName();
+        $typeName = $server->getTypeName();
 
         // TCP 启动参数
         // $tcpStatus = $server->getTcpSetting();
@@ -63,14 +64,14 @@ class HttpServerCommand
         $lines = [
             '                         Server Information                      ',
             '********************************************************************',
-            "* HTTP | host: <note>$httpHost</note>, port: <note>$httpPort</note>, type: <note>$httpType</note>, worker: <note>$workerNum</note>, mode: <note>$httpMode</note>",
+            "* HTTP | host: <note>$mainHost</note>, port: <note>$mainPort</note>, type: <note>$typeName</note>, worker: <note>$workerNum</note>, mode: <note>$modeName</note>",
             "* TCP  | host: <note>$tcpHost</note>, port: <note>$tcpPort</note>, type: <note>$tcpType</note>, worker: <note>$workerNum</note> ($tcpEnable)",
             '********************************************************************',
         ];
 
-        // 启动服务器
         \output()->writeln(implode("\n", $lines));
 
+        // Start the server
         $server->start();
     }
 
@@ -85,7 +86,7 @@ class HttpServerCommand
      */
     public function reload(): void
     {
-        $server = $this->getHttpServer();
+        $server = $this->createServer();
         $script = \input()->getScript();
 
         // Check if it has started
@@ -100,13 +101,16 @@ class HttpServerCommand
             Show::notice('Will only reload task worker');
         }
 
-        $server->reload($reloadTask);
+        if (!$server->reload($reloadTask)) {
+            Show::error('The swoole server worker process reload fail!');
+            return;
+        }
 
         \output()->writef('<success>Server %s reload success</success>', $script);
     }
 
     /**
-     * Stop the http server
+     * Stop the currently running server
      *
      * @CommandMapping()
      *
@@ -115,7 +119,7 @@ class HttpServerCommand
      */
     public function stop(): void
     {
-        $server = $this->getHttpServer();
+        $server = $this->createServer();
 
         // Check if it has started
         if (!$server->isRunning()) {
@@ -123,6 +127,7 @@ class HttpServerCommand
             return;
         }
 
+        // Do stopping.
         $server->stop();
     }
 
@@ -139,21 +144,13 @@ class HttpServerCommand
      *
      * @throws \ReflectionException
      * @throws \Swoft\Bean\Exception\ContainerException
-     * @throws \Swoft\Server\Exception\ServerException
      */
     public function restart(): void
     {
-        $server = $this->getHttpServer();
+        $server = $this->createServer();
 
-        // Check if it has started
-        if ($server->isRunning()) {
-            $this->stop();
-        }
-
-        // 重启默认是守护进程
-        $server->setDaemonize();
-        // Start server
-        $this->start();
+        // Restart server
+        $server->restart();
     }
 
     /**
@@ -161,7 +158,7 @@ class HttpServerCommand
      * @throws \ReflectionException
      * @throws \Swoft\Bean\Exception\ContainerException
      */
-    private function getHttpServer(): HttpServer
+    private function createServer(): HttpServer
     {
         // check env
         // EnvHelper::check();
@@ -178,7 +175,7 @@ class HttpServerCommand
      *
      * @param HttpServer $server
      */
-    protected function setStartArgs(HttpServer $server): void
+    protected function configStartOption(HttpServer $server): void
     {
         $asDaemon = \input()->getSameOpt(['d', 'daemon'], false);
 
