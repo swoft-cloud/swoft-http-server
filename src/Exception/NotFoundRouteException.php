@@ -4,11 +4,11 @@
 namespace Swoft\Http\Server\Exception;
 
 /**
- * Class MethodNotAllowedException
+ * Class NotFoundRouteException
  *
  * @since 2.0
  */
-class MethodNotAllowedException extends HttpServerException
+class NotFoundRouteException extends HttpServerException
 {
 
 }
