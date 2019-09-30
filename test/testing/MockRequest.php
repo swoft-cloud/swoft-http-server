@@ -111,7 +111,7 @@ class MockRequest extends Request
             $instance->get = $params;
         }
 
-        if ($server['request_method'] === self::POST) {
+        if ($server['request_method'] === self::POST || $server['request_method'] === self::PUT) {
             $instance->post = $params;
         }
 
