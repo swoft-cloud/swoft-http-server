@@ -40,6 +40,8 @@ class ValidatorMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        $requestMethod = $request->getMethod();
+
         // Controller and method
         $handlerId = $route->getHandler();
         [$className, $method] = explode('@', $handlerId);
@@ -64,8 +66,7 @@ class ValidatorMiddleware implements MiddlewareInterface
         $validator = BeanFactory::getBean('validator');
 
         /* @var Request $request */
-        [$parsedBody, $query] = $validator->validateRequest($parsedBody, $validates, $query);
-
+        [$parsedBody, $query] = $validator->validateRequest($parsedBody, $validates, $query, $requestMethod);
         if ($notParsedBody) {
             $parsedBody = $data;
         }
