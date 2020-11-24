@@ -27,7 +27,8 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.5"
+    "phpunit/phpunit": "^7.5",
+    "swoole/ide-helper": "dev-master"
   },
   "scripts": {
     "test": "./vendor/bin/phpunit -c phpunit.xml"
